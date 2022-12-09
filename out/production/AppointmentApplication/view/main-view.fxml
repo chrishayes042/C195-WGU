@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="213.0" prefWidth="642.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.mainViewController">
+   <children>
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="213.0" prefWidth="642.0">
+          <children>
+              <Label layoutX="14.0" layoutY="11.0" prefHeight="190.0" prefWidth="612.0" style="-fx-border-color: black; -fx-padding: 10; -fx-border-radius: 5;" />
+              <Label layoutX="256.0" layoutY="11.0" prefHeight="34.0" prefWidth="136.0" text="Page Menu">
+                  <font>
+                      <Font size="23.0" />
+                  </font>
+              </Label>
+              <Button fx:id="appointmentButton" onAction="#goToAppointmentsPage" layoutX="277.0" layoutY="54.0" mnemonicParsing="false" text="Appointments" />
+              <Button fx:id="custButton" onAction="#goToCustPage" layoutX="287.0" layoutY="94.0" mnemonicParsing="false" text="Customers" />
+              <Button fx:id="reportsButton" layoutX="295.0" layoutY="133.0" mnemonicParsing="false" text="Reports" />
+              <Button fx:id="exitButton" layoutX="30.0" layoutY="168.0" mnemonicParsing="false" text="Exit" />
+          </children>
+      </AnchorPane>
+   </children>
+</Pane>
