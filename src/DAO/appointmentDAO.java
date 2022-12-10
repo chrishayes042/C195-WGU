@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class appointmentDAO {
 
@@ -49,13 +51,56 @@ public class appointmentDAO {
         }
     }
 
-    public static void addNewAppointment(Appointments app) throws SQLException {
+    public static int updateAppointment(Appointments app) throws SQLException{
+        UpdateAppointment update = new UpdateAppointment();
+        return update.execute(app);
+    }
+    private static class UpdateAppointment{
+
+        public int execute(Appointments app) throws SQLException{
+            String sql = "UPDATE appointments " +
+                    "SET Title = ?, " +
+                    "Description = ?, " +
+                    "Location = ?," +
+                    "Type = ?, " +
+                    "Start = ?, " +
+                    "End = ?, " +
+                    "Create_Date = ?, " +
+                    "Created_By = ?, " +
+                    "Last_Update = ?," +
+                    " Last_Updated_By = ?," +
+                    "Customer_ID = ?," +
+                    "User_ID = ?, " +
+                    "Contact_ID = ? " +
+                    "WHERE appointment_ID = " + app.getAppointmentID() ;
+
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+            ps.setString(1, app.getAppointmentTitle());
+            ps.setString(2, app.getAppointmentDescription());
+            ps.setString(3, app.getAppointmentLocation());
+            ps.setString(4, app.getAppointmentType());
+            ps.setTimestamp(5, Timestamp.valueOf(app.getStart()));
+            ps.setTimestamp(6, Timestamp.valueOf(app.getEnd()));
+            ps.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setString(8, app.getCreatedBy());
+            ps.setTimestamp(9, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setString(10, app.getLastUpdtUser());
+            ps.setInt(11, app.getCustomerID());
+            ps.setInt(12, app.getUserID());
+            ps.setInt(13, app.getContactID());
+
+            ps.executeUpdate();
+            return app.getAppointmentID();
+        }
+    }
+
+    public static int addNewAppointment(Appointments app) throws SQLException {
         AddAppointment add = new AddAppointment();
-        add.execute(app);
+        return add.execute(app);
     }
     private static class AddAppointment{
 
-        public void execute(Appointments app) throws SQLException{
+        public int execute(Appointments app) throws SQLException{
             String sql = "INSERT INTO Appointments " +
                     "(Appointment_ID, " +
                     "Title, " +
@@ -72,7 +117,7 @@ public class appointmentDAO {
                     "User_ID, " +
                     "Contact_ID)" +
 
-                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
@@ -82,7 +127,6 @@ public class appointmentDAO {
                 ps.setString(3, app.getAppointmentDescription());
                 ps.setString(4, app.getAppointmentLocation());
                 ps.setString(5, app.getAppointmentType());
-
                 ps.setTimestamp(6, Timestamp.valueOf(app.getStart()));
                 ps.setTimestamp(7, Timestamp.valueOf(app.getEnd()));
                 ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
@@ -93,7 +137,7 @@ public class appointmentDAO {
                 ps.setInt(13, app.getUserID());
                 ps.setInt(14, app.getContactID());
 
-                ps.executeUpdate();
+               return ps.executeUpdate();
         }
     }
 
@@ -109,7 +153,26 @@ public class appointmentDAO {
             ps.executeUpdate();
         }
     }
+    public static int checkAppointmentOverLap(Appointments app, boolean isUpdate) throws SQLException {
+        ObservableList<Appointments> list = getAppointments();
+        AtomicInteger check = new AtomicInteger(-1);
+        list.forEach(appointments -> {
 
+            if(!isUpdate){
+                if(app.getStart().equals(appointments.getStart())){
+                    check.set(appointments.getAppointmentID());
+                } else if(app.getAppointmentID() == appointments.getAppointmentID()){
+                    check.set(appointments.getAppointmentID());
+                }
+            } else {
+                if(app.getAppointmentID() != appointments.getAppointmentID() && app.getStart().equals(appointments.getStart())){
+                    check.set(appointments.getAppointmentID());
+                }
+            }
+
+        });
+        return check.get();
+    }
 
 }
 

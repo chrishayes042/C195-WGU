@@ -40,7 +40,7 @@ public class userDAO {
     }
 
 
-    public ObservableList<Users> getAllUsers() throws SQLException{
+    public static ObservableList<Users> getAllUsers() throws SQLException{
         FindAllUsers fau = new FindAllUsers();
         return fau.execute();
     }
@@ -77,7 +77,7 @@ public class userDAO {
         });
         return userId.get();
     }
-    public String findUserNameFromId(int id) throws SQLException{
+    public static String findUserNameFromId(int id) throws SQLException{
         ObservableList<Users> list = getAllUsers();
         AtomicReference<String> name = new AtomicReference<>("");
         list.forEach(user -> {

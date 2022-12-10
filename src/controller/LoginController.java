@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -69,13 +70,8 @@ public class LoginController implements Initializable {
                }));
            } else {
                try {
+                   switchPage(event, "../view/main-view.fxml");
 
-                   FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/main-view.fxml"));
-                   Parent root = (Parent) fxmlLoader.load();
-                   Stage stage = new Stage();
-                   stage.setTitle("Main");
-                   stage.setScene(new Scene(root));
-                   stage.show();
 
                } catch (IOException e){
                    e.printStackTrace();
@@ -101,17 +97,6 @@ public class LoginController implements Initializable {
        return user;
    }
 
-   private void nextPage() throws IOException{
-
-       FXMLLoader loader = new FXMLLoader();
-       loader.setLocation(getClass().getResource("main-view.fxml"));
-       Parent root = loader.load();
-       Stage stage = (Stage) signInButton.getScene().getWindow();
-       Scene scene = new Scene(root);
-       stage.setScene(scene);
-       stage.show();
-
-   }
    private boolean userHasAppointment(int userId, LocalDateTime start, LocalDateTime end) throws SQLException, IOException {
        ObservableList<Appointments> appList = appointmentDAO.getAppointments();
 
@@ -124,6 +109,15 @@ public class LoginController implements Initializable {
 
        return hasApp;
    }
+
+    @FXML
+    private void switchPage(javafx.event.ActionEvent event, String switchScreen) throws IOException {
+        Parent parent = FXMLLoader.load(getClass().getResource(switchScreen));
+        Scene scene = new Scene(parent);
+        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(scene);
+        window.show();
+    }
 
 
 

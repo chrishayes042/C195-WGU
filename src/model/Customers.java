@@ -14,6 +14,25 @@ public class Customers {
     private Timestamp lastUpdtTs;
     private String lastUpdtUser;
     private int divisionId;
+    private String Division;
+
+    public int getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
+    }
+
+    private int countryId;
+
+    public String getDivision() {
+        return Division;
+    }
+
+    public void setDivision(String division) {
+        Division = division;
+    }
 
     public int getCustId() {
         return custId;

@@ -8,7 +8,7 @@ public class Countries {
     private String country;
     private LocalDateTime createdDate;
     private String createdBy;
-    private Timestamp lastUpDtTs;
+    private LocalDateTime lastUpDtTs;
     private String lastUpDtUser;
 
     public int getCountryId(){
@@ -35,10 +35,10 @@ public class Countries {
     public void setCreatedBy(String cb){
         this.createdBy = cb;
     }
-    public Timestamp getLastUpDtTs(){
+    public LocalDateTime getLastUpDtTs(){
         return lastUpDtTs;
     }
-    public void setLastUpDtTs(Timestamp ts){
+    public void setLastUpDtTs(LocalDateTime ts){
         this.lastUpDtTs = ts;
     }
     public String getLastUpDtUser(){

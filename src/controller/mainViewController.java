@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -11,7 +12,6 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import model.Appointments;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -51,13 +51,20 @@ public class mainViewController implements Initializable {
 
 	}
 
-
+	/**
+	 * Method to open the customer view
+	 * @param actionEvent
+	 * @throws IOException
+	 */
 	public void goToCustPage(javafx.event.ActionEvent actionEvent) throws IOException {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/appointment-view.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/customer-view.fxml"));
 		Parent root = (Parent) fxmlLoader.load();
 		Stage stage = new Stage();
-		stage.setTitle("Appointments");
+		stage.setTitle("Customers");
 		stage.setScene(new Scene(root));
 		stage.show();
+	}
+	public void exitWindow(ActionEvent actionEvent) throws IOException {
+		((Stage)(((Button)actionEvent.getSource()).getScene().getWindow())).close();
 	}
 }

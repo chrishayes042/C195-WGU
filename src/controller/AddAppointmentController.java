@@ -4,7 +4,7 @@ import DAO.appointmentDAO;
 import DAO.contactDAO;
 import DAO.customerDAO;
 import DAO.userDAO;
-
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,7 +15,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.Appointments;
 import model.Contacts;
@@ -29,36 +28,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Appointment Controller for the appointment-view.fxml
- */
-
-public class AppointmentController implements Initializable {
-	@FXML
-	private TableView<Appointments> appTableView;
-	@FXML
-	private TableColumn<Appointments, Integer> appointmentId;
-	@FXML
-	private TableColumn<Appointments, String> title;
-	@FXML
-	private TableColumn<Appointments, String> desc;
-	@FXML
-	private TableColumn<Appointments, String> loc;
-	@FXML
-	private TableColumn<Appointments, String> type;
-	@FXML
-	private TableColumn<Appointments, LocalDateTime> start;
-	@FXML
-	private TableColumn<Appointments, LocalDateTime> end;
-	@FXML
-	private TableColumn<Appointments, String> custId;
-	@FXML
-	private TableColumn<Appointments, String> contactId;
-	@FXML
-	private TableColumn<Appointments, Integer> userId;
+public class AddAppointmentController implements Initializable {
 	@FXML
 	private TextField appIdText;
 	@FXML
@@ -79,56 +52,58 @@ public class AppointmentController implements Initializable {
 	private TextField appTypeText;
 	@FXML
 	private ComboBox<String> userIdCombo;
-	@FXML
-	private ComboBox<String> filterCombo;
+
 	@FXML
 	private ComboBox<String> contactNameCombo;
 	@FXML
 	private ComboBox<String> custIdCombo;
-
-
-	/**
-	 * Initializes the controller.
-	 * I have it setting the table data when the fxml is opened.
-	 *
-	 * @param url
-	 * @param resourceBundle
-	 */
+	@FXML
+	private Button exitButton;
+	AppointmentController appC;
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+
 		try {
-			setTable();
+			setComboBoxes();
+			ObservableList<Appointments> appsList = appointmentDAO.getAppointments();
+			ObservableList<Integer> appIdList = FXCollections.observableArrayList();
+
+			appsList.forEach(app -> {
+				appIdList.add(app.getAppointmentID());
+			});
+			AtomicInteger i = new AtomicInteger(1);
+			AtomicInteger appId = new AtomicInteger(appsList.size() + 1);
+			appsList.forEach(app -> {
+				if(app.getAppointmentID() != i.get()){
+					appId.set(i.get());
+				} else {
+					i.getAndIncrement();
+				}
+			});
+
+
+			appIdText.setText(String.valueOf(appId.get()));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		appIdText.setEditable(false);
+
 
 	}
-
 	/**
-	 * Changes the current screen to the add appointment view.
-	 * Calls the switchToAddPage method
-	 * @param actionEvent
-	 * @throws IOException
-	 */
-	@FXML
-	public void getAddAppointmentPage(javafx.event.ActionEvent actionEvent) throws IOException {
-		switchToAddPage(actionEvent, "../view/addAppointment-view.fxml");
-
-	}
-
-
-
-
-	/**
-	 * method to update appointments
-	 *
+	 * Method to add a new appointment to the sql server. Sends an Appointment Object to the appointmentDAO.
+	 * Has a text check for errors
+	 * Has check for conflicting appointments
 	 * @throws SQLException
 	 */
 	@FXML
-	private void updateAppointment() throws SQLException {
-		if(textCheck()) {
-			Appointments app = new Appointments();
+	private void addAppointment(javafx.event.ActionEvent event) throws SQLException, IOException {
+
+		ObservableList<Appointments> appsList = appointmentDAO.getAppointments();
+		ObservableList<Contacts> contactsList = contactDAO.getAllContacts();
+		ObservableList<Users> userList = userDAO.getAllUsers();
+		Appointments app = new Appointments();
+
+		if (textCheck()) {
 			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 			LocalDate ldStart = startDatePicker.getValue();
 			LocalDate ldEnd = endDatePicker.getValue();
@@ -136,7 +111,6 @@ public class AppointmentController implements Initializable {
 			LocalTime ltEnd = LocalTime.parse(endCombo.getValue(), timeFormatter);
 			LocalDateTime ldtStart = LocalDateTime.of(ldStart, ltStart);
 			LocalDateTime ldtEnd = LocalDateTime.of(ldEnd, ltEnd);
-
 			app.setAppointmentID(Integer.parseInt(appIdText.getText().trim()));
 			app.setAppointmentTitle(appTitleText.getText().trim());
 			app.setAppointmentDescription(appDescText.getText().trim());
@@ -158,65 +132,28 @@ public class AppointmentController implements Initializable {
 			int cId = contactDAO.findContactId(contactName);
 			app.setContactID(cId);
 			// Check if appointment has same ID or conflicting start date/time
-			int overLap = appointmentDAO.checkAppointmentOverLap(app, true);
-			if (overLap > 0) {
+			int overLap = appointmentDAO.checkAppointmentOverLap(app, false);
+			if(overLap > 0){
 				Alert alert = new Alert(Alert.AlertType.WARNING);
 				alert.setTitle("This appointment is not allowed");
 				alert.setContentText("The appointment conflicts with appointment ID: " + overLap);
 				alert.showAndWait();
 			} else {
-				int updated = appointmentDAO.updateAppointment(app);
-				if (updated > 0) {
-					setTable();
+				int added = appointmentDAO.addNewAppointment(app);
+				if(added > 0){
 					Alert addedAlert = new Alert(Alert.AlertType.CONFIRMATION);
-					addedAlert.setTitle("Appointment Updated");
-					String context = ("Appointment ID: " + app.getAppointmentID() + " has been updated.");
-					addedAlert.setContentText(context);
+					addedAlert.setTitle("New Appointment Added");
+					addedAlert.setContentText("A new appointment has been added");
 					addedAlert.showAndWait();
+					exitPage(event, "/view/appointment-view.fxml");
+
 
 				}
 			}
+
 		}
 
 	}
-
-	/**
-	 * Method to cancel an appointment.
-	 * Shows confirmation pop up
-	 * Gets Appointment object from table click
-	 * Sends the Appointment object to the appointmentDAO to insert into MSSQL table
-	 *
-	 * @throws SQLException
-	 */
-	@FXML
-	private void cancelAppointment() throws SQLException {
-		ButtonType buttonType = new ButtonType("Yes and Close", ButtonBar.ButtonData.OK_DONE);
-		ButtonType cancelButton = new ButtonType("No and Close", ButtonBar.ButtonData.CANCEL_CLOSE);
-		Alert deleteAlert = new Alert(Alert.AlertType.CONFIRMATION);
-		deleteAlert.getButtonTypes().setAll(buttonType, cancelButton);
-		deleteAlert.setTitle("Cancel Appointment");
-		deleteAlert.setContentText("Are you sure that you want to cancel this appointment?");
-		Optional<ButtonType> result = deleteAlert.showAndWait();
-		if(!result.isPresent()){
-			// do nothing...
-		} else if (result.get() == buttonType){
-			Appointments app = appTableView.getSelectionModel().getSelectedItem();
-			appointmentDAO.cancelAppointment(app);
-			Alert canceled = new Alert(Alert.AlertType.WARNING);
-			canceled.setTitle("Canceled Appointment");
-			String message = "Appointment ID: " + app.getAppointmentID() + "\n" + "Appointment Type: " + app.getAppointmentType() + " has been canceled.";
-			canceled.setContentText(message);
-			canceled.showAndWait();
-			clearText();
-		} else if (result.get() == cancelButton){
-			deleteAlert.close();
-			clearText();
-		}
-
-
-		setTable();
-	}
-
 	/**
 	 * This is the error checker that checks the textfield/datepicker/comboboxes for errors.
 	 * Shows an alert if any errors
@@ -273,12 +210,6 @@ public class AppointmentController implements Initializable {
 		return textCheck;
 	}
 
-	/**
-	 * Method to populate the combo boxes.
-	 * Get contacts from the contactDAO. Uses that to populate the contact names for the combo box.
-	 * Used a lambda expression on line 299 to loop through the custList and add each cust id to a new list to populate a combobox
-	 * @throws SQLException
-	 */
 	protected void setComboBoxes() throws SQLException {
 		// Gets all contacts into list
 		ObservableList<Contacts> contactsList = contactDAO.getAllContacts();
@@ -329,74 +260,16 @@ public class AppointmentController implements Initializable {
 		endCombo.setItems(timesComboList);
 		startCombo.getSelectionModel().selectFirst();
 		endCombo.getSelectionModel().selectFirst();
-		// create new list with strings
-
 	}
-
-	/**
-	 * setTable method.
-	 * Gets the Observable list from the appointmentDAO and uses that to populate the table data
-	 *
-	 * @throws SQLException
-	 */
-	void setTable() throws SQLException {
-
-		ObservableList<Appointments> appList = null;
-		try {
-			appList = appointmentDAO.getAppointments();
-			setComboBoxes();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		appointmentId.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("appointmentID"));
-		title.setCellValueFactory(new PropertyValueFactory<Appointments, String>("appointmentTitle"));
-		desc.setCellValueFactory(new PropertyValueFactory<Appointments, String>("appointmentDescription"));
-		loc.setCellValueFactory(new PropertyValueFactory<Appointments, String>("appointmentLocation"));
-		type.setCellValueFactory(new PropertyValueFactory<Appointments, String>("appointmentType"));
-		start.setCellValueFactory(new PropertyValueFactory<Appointments, LocalDateTime>("start"));
-		end.setCellValueFactory(new PropertyValueFactory<Appointments, LocalDateTime>("end"));
-		custId.setCellValueFactory(new PropertyValueFactory<Appointments, String>("customerID"));
-		contactId.setCellValueFactory(new PropertyValueFactory<Appointments, String>("contactID"));
-		userId.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("userID"));
-
-		appTableView.setItems(appList);
-	}
-
-	/**
-	 * Method to populate the textfields/datepicker/combobox with the information from the table
-	 *
-	 * @param mouseEvent
-	 */
 	@FXML
-	private void textPopulate(javafx.scene.input.MouseEvent mouseEvent) throws SQLException {
-		Appointments app = appTableView.getSelectionModel().getSelectedItem();
-
-		appIdText.setText(String.valueOf(app.getAppointmentID()));
-		appTitleText.setText(app.getAppointmentTitle());
-		appDescText.setText(app.getAppointmentDescription());
-		appLocText.setText(app.getAppointmentLocation());
-		appTypeText.setText(app.getAppointmentType());
-		LocalDate ldStart = app.getStart().toLocalDate();
-		startDatePicker.setValue(ldStart);
-		LocalDate ldEnd = app.getEnd().toLocalDate();
-		endDatePicker.setValue(ldEnd);
-		LocalTime ltStart = app.getStart().toLocalTime();
-		String ltStartString = ltStart.toString();
-		startCombo.getSelectionModel().select(ltStartString);
-		LocalTime ltEnd = app.getEnd().toLocalTime();
-		String ltEndString = ltEnd.toString();
-		endCombo.getSelectionModel().select(ltEndString);
-		custIdCombo.getSelectionModel().select(app.getCustomerID());
-		userIdCombo.getSelectionModel().select(app.getUserID());
-		String name = contactDAO.findContactName(app.getContactID());
-		contactNameCombo.getSelectionModel().select(name);
-
-
+	private void exitPage(javafx.event.ActionEvent event, String switchScreen) throws IOException {
+		Parent parent = FXMLLoader.load(getClass().getResource(switchScreen));
+		Scene scene = new Scene(parent);
+		Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+		window.setScene(scene);
+		window.show();
 	}
 
-	/**
-	 * Clears the text fields and sets the combo boxes
-	 */
 	@FXML
 	private void clearText(){
 		appTitleText.setText(null);
@@ -412,30 +285,15 @@ public class AppointmentController implements Initializable {
 		contactNameCombo.getSelectionModel().selectFirst();
 	}
 
-	/**
-	 * Method to switch the current screen to any screen where called
-	 * @param event
-	 * @param switchScreen
-	 * @throws IOException
-	 */
-	@FXML
-	private void switchToAddPage(javafx.event.ActionEvent event, String switchScreen) throws IOException {
-		Parent parent = FXMLLoader.load(getClass().getResource(switchScreen));
 
+	public void exitWindow(ActionEvent actionEvent) throws IOException {
+		Parent parent = FXMLLoader.load(getClass().getResource("/view/appointment-view.fxml"));
 		Scene scene = new Scene(parent);
-		Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+		Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 		window.setScene(scene);
 		window.show();
 	}
-
-	/**
-	 * Exits the current screen when user hits the exit button
-	 * @param actionEvent
-	 * @throws IOException
-	 */
-	public void exitWindow(ActionEvent actionEvent) throws IOException {
-		((Stage)(((Button)actionEvent.getSource()).getScene().getWindow())).close();
+	public void exitApplication(ActionEvent event) {
+		Platform.exit();
 	}
-
-
 }

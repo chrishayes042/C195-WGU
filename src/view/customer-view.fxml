@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="936.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.customerController">
+   <children>
+      <Button layoutX="13.0" layoutY="337.0" mnemonicParsing="false" text="Add New Customer" onAction="#getAddCustPage"/>
+      <Button layoutX="160.0" layoutY="337.0" mnemonicParsing="false" text="Update Customer" onAction="#updateCustomer"/>
+      <Button layoutX="884.0" layoutY="19.0" mnemonicParsing="false" text="Exit" onAction="#exitWindow" />
+      <Button layoutX="315.0" layoutY="379.0" mnemonicParsing="false" text="Delete Customer" onAction="#deleteCust"/>
+      <TableView fx:id="custTableView" layoutX="315.0" layoutY="76.0" prefHeight="294.0" prefWidth="604.0" onMouseClicked="#textPopulate">
+        <columns>
+          <TableColumn fx:id="custId" prefWidth="75.0" text="Cust ID" />
+          <TableColumn fx:id="custName" prefWidth="75.0" text="Cust Name" />
+            <TableColumn fx:id="address" prefWidth="210.0" text="Address" />
+            <TableColumn fx:id="postal" prefWidth="57.0" text="Postal Code" />
+            <TableColumn fx:id="phone" prefWidth="119.0" text="Phone" />
+            <TableColumn fx:id="divisionId" prefWidth="67.0" text="Division ID" />
+        </columns>
+      </TableView>
+      <Label layoutX="22.0" layoutY="90.0" text="Customer ID" />
+      <Label layoutX="22.0" layoutY="124.0" text="Customer Name" />
+      <Label layoutX="22.0" layoutY="158.0" text="Address" />
+      <Label layoutX="22.0" layoutY="192.0" text="Postal Code" />
+      <Label layoutX="22.0" layoutY="226.0" text="Phone #" />
+      <Label layoutX="22.0" layoutY="260.0" text="Division ID" />
+      <Label layoutX="24.0" layoutY="14.0" text="Customer Panel">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <TextField fx:id="custIdText" layoutX="133.0" layoutY="86.0" disable="true" editable="false"/>
+      <TextField fx:id="custNameText" layoutX="133.0" layoutY="120.0" />
+      <TextField fx:id="custAddrText"  layoutX="133.0" layoutY="154.0" />
+      <TextField fx:id="custZipText" layoutX="133.0" layoutY="188.0" />
+      <TextField fx:id="custPhoneText" layoutX="133.0" layoutY="222.0" />
+      <ComboBox fx:id="custDivisionIdCombo" layoutX="133.0" layoutY="256.0" prefWidth="150.0" />
+      <Separator layoutX="302.0" layoutY="62.0" orientation="VERTICAL" prefHeight="356.0" prefWidth="5.0" />
+      <Separator layoutX="-1.0" layoutY="61.0" prefHeight="0.0" prefWidth="936.0" />
+   </children>
+</AnchorPane>
