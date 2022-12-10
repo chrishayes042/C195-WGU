@@ -119,12 +119,13 @@ public class AddAppointmentController implements Initializable {
 
 			app.setStart(ldtStart);
 			app.setEnd(ldtEnd);
+			int custId = customerDAO.getCustIdFromName(custIdCombo.getSelectionModel().getSelectedItem());
+			app.setCustomerID(custId);
+			int userId = userDAO.findUserIdFromName(userIdCombo.getSelectionModel().getSelectedItem());
+			app.setUserID(userId);
 
-			app.setCustomerID(Integer.parseInt(custIdCombo.getSelectionModel().getSelectedItem()));
-			app.setUserID(Integer.parseInt(userIdCombo.getSelectionModel().getSelectedItem()));
-
-			int userId = Integer.parseInt(userIdCombo.getSelectionModel().getSelectedItem());
-			String userName = userDAO.findUserNameFromId(userId);
+			int user = Integer.parseInt(userIdCombo.getSelectionModel().getSelectedItem());
+			String userName = userDAO.findUserNameFromId(user);
 			app.setCreatedBy(userName);
 			app.setLastUpdtUser(userName);
 
@@ -225,17 +226,17 @@ public class AddAppointmentController implements Initializable {
 		contactNameCombo.getSelectionModel().selectFirst();
 
 		ObservableList<Customers> custList = customerDAO.getAllCusts();
-		ObservableList<String> custIDList = FXCollections.observableArrayList();
-		custIDList.add("Select...");
-		custList.forEach(cust -> custIDList.add(String.valueOf(cust.getCustId())));
-		custIdCombo.setItems(custIDList);
+		ObservableList<String> custNameList = FXCollections.observableArrayList();
+		custNameList.add("Select...");
+		custList.forEach(cust -> custNameList.add(String.valueOf(cust.getCustName())));
+		custIdCombo.setItems(custNameList);
 		custIdCombo.getSelectionModel().selectFirst();
 
 		ObservableList<Users> userList = userDAO.getAllUsers();
-		ObservableList<String> userIdList = FXCollections.observableArrayList();
-		userIdList.add("Select...");
-		userList.forEach(users -> userIdList.add(String.valueOf(users.getUserID())));
-		userIdCombo.setItems(userIdList);
+		ObservableList<String> userNameList = FXCollections.observableArrayList();
+		userNameList.add("Select...");
+		userList.forEach(users -> userNameList.add(String.valueOf(users.getUserName())));
+		userIdCombo.setItems(userNameList);
 		userIdCombo.getSelectionModel().selectFirst();
 
 		// Create a new list of strings

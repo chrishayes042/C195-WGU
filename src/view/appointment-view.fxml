@@ -68,8 +68,8 @@
       <Button layoutX="375.0" layoutY="562.0" mnemonicParsing="false" onAction="#cancelAppointment" text="Delete Appointment" />
       <Button layoutX="1222.0" layoutY="33.0" mnemonicParsing="false" onAction="#exitWindow" text="Exit" />
       <Button layoutX="195.0" layoutY="512.0" mnemonicParsing="false" onAction="#clearText" text="Clear Fields" />
-      <RadioButton layoutX="375.0" layoutY="108.0" mnemonicParsing="false" text="All" />
-      <RadioButton layoutX="437.0" layoutY="108.0" mnemonicParsing="false" text="Weekly" />
-      <RadioButton layoutX="518.0" layoutY="108.0" mnemonicParsing="false" text="Monthly" />
+      <RadioButton fx:id="allRadioButton" layoutX="375.0" layoutY="108.0" mnemonicParsing="false" text="All" onAction="#setTable" />
+      <RadioButton fx:id="weeklyRadioButton" layoutX="437.0" layoutY="108.0" mnemonicParsing="false" text="Weekly" onAction="#filterTableWeekly"/>
+      <RadioButton fx:id="monthlyRadioButton" layoutX="518.0" layoutY="108.0" mnemonicParsing="false" text="Monthly" onAction="#filterTableMonthly"/>
    </children>
 </Pane>

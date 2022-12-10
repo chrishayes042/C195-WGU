@@ -85,6 +85,12 @@ public class AppointmentController implements Initializable {
 	private ComboBox<String> contactNameCombo;
 	@FXML
 	private ComboBox<String> custIdCombo;
+	@FXML
+	private RadioButton allRadioButton;
+	@FXML
+	private RadioButton weeklyRadioButton;
+	@FXML
+	private RadioButton monthlyRadioButton;
 
 
 	/**
@@ -102,6 +108,8 @@ public class AppointmentController implements Initializable {
 			e.printStackTrace();
 		}
 		appIdText.setEditable(false);
+		allRadioButton.setSelected(true);
+
 
 	}
 
@@ -145,18 +153,12 @@ public class AppointmentController implements Initializable {
 
 			app.setStart(ldtStart);
 			app.setEnd(ldtEnd);
+			app.setCustomerID(customerDAO.getCustIdFromName(custIdCombo.getSelectionModel().getSelectedItem()));
+			app.setUserID(userDAO.findUserIdFromName(userIdCombo.getSelectionModel().getSelectedItem()));
+			app.setCreatedBy(userDAO.findUserNameFromId(Integer.parseInt(userIdCombo.getSelectionModel().getSelectedItem())));
+			app.setLastUpdtUser(userDAO.findUserNameFromId(Integer.parseInt(userIdCombo.getSelectionModel().getSelectedItem())));
+			app.setContactID(contactDAO.findContactId(contactNameCombo.getSelectionModel().getSelectedItem()));
 
-			app.setCustomerID(Integer.parseInt(custIdCombo.getSelectionModel().getSelectedItem()));
-			app.setUserID(Integer.parseInt(userIdCombo.getSelectionModel().getSelectedItem()));
-
-			int userId = Integer.parseInt(userIdCombo.getSelectionModel().getSelectedItem());
-			String userName = userDAO.findUserNameFromId(userId);
-			app.setCreatedBy(userName);
-			app.setLastUpdtUser(userName);
-
-			String contactName = contactNameCombo.getSelectionModel().getSelectedItem();
-			int cId = contactDAO.findContactId(contactName);
-			app.setContactID(cId);
 			// Check if appointment has same ID or conflicting start date/time
 			int overLap = appointmentDAO.checkAppointmentOverLap(app, true);
 			if (overLap > 0) {
@@ -276,7 +278,7 @@ public class AppointmentController implements Initializable {
 	/**
 	 * Method to populate the combo boxes.
 	 * Get contacts from the contactDAO. Uses that to populate the contact names for the combo box.
-	 * Used a lambda expression on line 299 to loop through the custList and add each cust id to a new list to populate a combobox
+	 * Used a lambda expression on line 299 to loop through the custList and add each cust name to a new list to populate a combobox
 	 * @throws SQLException
 	 */
 	protected void setComboBoxes() throws SQLException {
@@ -294,17 +296,17 @@ public class AppointmentController implements Initializable {
 		contactNameCombo.getSelectionModel().selectFirst();
 
 		ObservableList<Customers> custList = customerDAO.getAllCusts();
-		ObservableList<String> custIDList = FXCollections.observableArrayList();
-		custIDList.add("Select...");
-		custList.forEach(cust -> custIDList.add(String.valueOf(cust.getCustId())));
-		custIdCombo.setItems(custIDList);
+		ObservableList<String> custNameList = FXCollections.observableArrayList();
+		custNameList.add("Select...");
+		custList.forEach(cust -> custNameList.add(String.valueOf(cust.getCustName())));
+		custIdCombo.setItems(custNameList);
 		custIdCombo.getSelectionModel().selectFirst();
 
 		ObservableList<Users> userList = userDAO.getAllUsers();
-		ObservableList<String> userIdList = FXCollections.observableArrayList();
-		userIdList.add("Select...");
-		userList.forEach(users -> userIdList.add(String.valueOf(users.getUserID())));
-		userIdCombo.setItems(userIdList);
+		ObservableList<String> userNameList = FXCollections.observableArrayList();
+		userNameList.add("Select...");
+		userList.forEach(users -> userNameList.add(String.valueOf(users.getUserName())));
+		userIdCombo.setItems(userNameList);
 		userIdCombo.getSelectionModel().selectFirst();
 
 		// Create a new list of strings
@@ -339,8 +341,11 @@ public class AppointmentController implements Initializable {
 	 *
 	 * @throws SQLException
 	 */
+	@FXML
 	void setTable() throws SQLException {
-
+		monthlyRadioButton.setSelected(false);
+		weeklyRadioButton.setSelected(false);
+		clearText();
 		ObservableList<Appointments> appList = null;
 		try {
 			appList = appointmentDAO.getAppointments();
@@ -361,6 +366,59 @@ public class AppointmentController implements Initializable {
 
 		appTableView.setItems(appList);
 	}
+	/**
+	 * Filter the table method. Gets a list of all appointments via getAppointments Method
+	 * Utilizes a lambda to loop through the list to check if the end date is after the start week and before the end week variables
+	 * Adds those Appointments objects to a new list to set the table data
+	 * @param e
+	 * @throws SQLException
+	 */
+	@FXML
+	private void filterTableWeekly(ActionEvent e) throws SQLException{
+		allRadioButton.setSelected(false);
+		monthlyRadioButton.setSelected(false);
+		ObservableList<Appointments> allAppsList = appointmentDAO.getAppointments();
+		ObservableList<Appointments> weeklyList = FXCollections.observableArrayList();
+
+		LocalDateTime startWeek = LocalDateTime.now().minusWeeks(1);
+		LocalDateTime endWeek = LocalDateTime.now().plusWeeks(1);
+
+		allAppsList.forEach(app ->{
+			if(app.getEnd().isAfter(startWeek) && app.getEnd().isBefore(endWeek)){
+				weeklyList.add(app);
+			}
+			appTableView.setItems(weeklyList);
+		});
+		clearText();
+
+	}
+
+	/**
+	 * Filter the table method. Gets a list of all appointments via getAppointments Method
+	 * Utilizes a lambda to loop through the list to check if the end date is after the start month and before the end month variables
+	 * Adds those Appointments objects to a new list to set the table data
+	 * @param e
+	 * @throws SQLException
+	 */
+	@FXML
+	private void filterTableMonthly(ActionEvent e) throws SQLException{
+		allRadioButton.setSelected(false);
+		weeklyRadioButton.setSelected(false);
+		ObservableList<Appointments> allAppsList = appointmentDAO.getAppointments();
+		ObservableList<Appointments> monthList = FXCollections.observableArrayList();
+
+		LocalDateTime startMonth = LocalDateTime.now().minusMonths(1);
+		LocalDateTime endMonth = LocalDateTime.now().plusMonths(1);
+
+		allAppsList.forEach(app ->{
+			if(app.getEnd().isAfter(startMonth) && app.getEnd().isBefore(endMonth)){
+				monthList.add(app);
+			}
+			appTableView.setItems(monthList);
+		});
+
+		clearText();
+	}
 
 	/**
 	 * Method to populate the textfields/datepicker/combobox with the information from the table
@@ -370,35 +428,37 @@ public class AppointmentController implements Initializable {
 	@FXML
 	private void textPopulate(javafx.scene.input.MouseEvent mouseEvent) throws SQLException {
 		Appointments app = appTableView.getSelectionModel().getSelectedItem();
-
-		appIdText.setText(String.valueOf(app.getAppointmentID()));
-		appTitleText.setText(app.getAppointmentTitle());
-		appDescText.setText(app.getAppointmentDescription());
-		appLocText.setText(app.getAppointmentLocation());
-		appTypeText.setText(app.getAppointmentType());
-		LocalDate ldStart = app.getStart().toLocalDate();
-		startDatePicker.setValue(ldStart);
-		LocalDate ldEnd = app.getEnd().toLocalDate();
-		endDatePicker.setValue(ldEnd);
-		LocalTime ltStart = app.getStart().toLocalTime();
-		String ltStartString = ltStart.toString();
-		startCombo.getSelectionModel().select(ltStartString);
-		LocalTime ltEnd = app.getEnd().toLocalTime();
-		String ltEndString = ltEnd.toString();
-		endCombo.getSelectionModel().select(ltEndString);
-		custIdCombo.getSelectionModel().select(app.getCustomerID());
-		userIdCombo.getSelectionModel().select(app.getUserID());
-		String name = contactDAO.findContactName(app.getContactID());
-		contactNameCombo.getSelectionModel().select(name);
-
+		if(app != null) {
+			appIdText.setText(String.valueOf(app.getAppointmentID()));
+			appTitleText.setText(app.getAppointmentTitle());
+			appDescText.setText(app.getAppointmentDescription());
+			appLocText.setText(app.getAppointmentLocation());
+			appTypeText.setText(app.getAppointmentType());
+			LocalDate ldStart = app.getStart().toLocalDate();
+			startDatePicker.setValue(ldStart);
+			LocalDate ldEnd = app.getEnd().toLocalDate();
+			endDatePicker.setValue(ldEnd);
+			LocalTime ltStart = app.getStart().toLocalTime();
+			String ltStartString = ltStart.toString();
+			startCombo.getSelectionModel().select(ltStartString);
+			LocalTime ltEnd = app.getEnd().toLocalTime();
+			String ltEndString = ltEnd.toString();
+			endCombo.getSelectionModel().select(ltEndString);
+			custIdCombo.getSelectionModel().select(app.getCustomerID());
+			userIdCombo.getSelectionModel().select(app.getUserID());
+			String name = contactDAO.findContactName(app.getContactID());
+			contactNameCombo.getSelectionModel().select(name);
+		}
 
 	}
 
 	/**
-	 * Clears the text fields and sets the combo boxes
+	 * Clears the text fields and sets the combo boxes back to first selection
 	 */
 	@FXML
 	private void clearText(){
+
+		appIdText.setText(null);
 		appTitleText.setText(null);
 		appDescText.setText(null);
 		appLocText.setText(null);
