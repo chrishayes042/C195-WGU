@@ -84,7 +84,14 @@ public class LoginController implements Initializable {
                    alertAppoint.setTitle(resourceBundle.getString("alertApp"));
                    alertAppoint.setHeaderText(resourceBundle.getString("alertAppHeader"));
                    alertAppoint.setContentText(resourceBundle.getString("alertAppContent"));
+               } else {
+                   Alert alertAppoint = new Alert(Alert.AlertType.CONFIRMATION);
+                   Locale.setDefault(locale);
+                   resourceBundle = ResourceBundle.getBundle("location", Locale.getDefault());
+                   alertAppoint.setTitle(resourceBundle.getString("noApp"));
+                   alertAppoint.setContentText(resourceBundle.getString("noAppContent"));
                }
+
 
 
            }
