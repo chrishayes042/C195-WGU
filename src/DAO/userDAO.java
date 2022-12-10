@@ -67,7 +67,7 @@ public class userDAO {
         }
     }
 
-    public int findUserIdFromName(String name) throws SQLException {
+    public static int findUserIdFromName(String name) throws SQLException {
         ObservableList<Users> list = getAllUsers();
         AtomicInteger userId = new AtomicInteger(-1);
         list.forEach(user -> {
