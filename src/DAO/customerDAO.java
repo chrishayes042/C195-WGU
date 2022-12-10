@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class customerDAO {
 
@@ -145,6 +146,16 @@ public class customerDAO {
 			ps.executeUpdate();
 			return cust.getCustId();
 		}
+	}
+	public static int getCustIdFromName(String name) throws SQLException {
+		ObservableList<Customers> custList = getAllCusts();
+		AtomicInteger id = new AtomicInteger();
+		custList.forEach(cust ->{
+			if(name.equals(cust.getCustName())){
+				id.set(cust.getCustId());
+			}
+		});
+		return id.get();
 	}
 
 
