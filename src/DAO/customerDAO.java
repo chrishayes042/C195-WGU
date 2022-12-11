@@ -20,7 +20,7 @@ public class customerDAO {
 		return fac.execute();
 	}
 
-	private static class FindAllCustomers{
+	private static class FindAllCustomers {
 
 		public ObservableList<Customers> execute() throws SQLException {
 			String sql = "SELECT * from customers";
@@ -28,7 +28,7 @@ public class customerDAO {
 			ResultSet rs = ps.executeQuery();
 			ObservableList<Customers> custList = FXCollections.observableArrayList();
 
-			while (rs.next()){
+			while (rs.next()) {
 				Customers cust = new Customers();
 
 				cust.setCustId(rs.getInt(1));
@@ -52,14 +52,15 @@ public class customerDAO {
 	 * Delete customer method. Takes in a Customer Object.
 	 * Gets the appointments to check if the customer has an appointment. If so, cancels the appointment first,
 	 * then deletes the cust.
+	 *
 	 * @param cust
 	 * @throws SQLException
 	 */
-	public static void deleteCustomer(Customers cust) throws SQLException{
+	public static void deleteCustomer(Customers cust) throws SQLException {
 
 		ObservableList<Appointments> appList = appointmentDAO.getAppointments();
 		appList.forEach(app -> {
-			if(cust.getCustId() == app.getCustomerID()){
+			if (cust.getCustId() == app.getCustomerID()) {
 				try {
 					appointmentDAO.cancelAppointment(app);
 				} catch (SQLException e) {
@@ -71,22 +72,24 @@ public class customerDAO {
 		DeleteCustomer dc = new DeleteCustomer();
 		dc.execute(cust);
 	}
-	private static class DeleteCustomer{
 
-		public void execute(Customers cust) throws SQLException{
+	private static class DeleteCustomer {
+
+		public void execute(Customers cust) throws SQLException {
 			String sql = "DELETE from customers where Customer_ID = " + cust.getCustId();
 			PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 			ps.executeUpdate();
 		}
 	}
 
-	public static int addNewCustomer(Customers cust) throws SQLException{
+	public static int addNewCustomer(Customers cust) throws SQLException {
 		AddCustomer ac = new AddCustomer();
 		return ac.execute(cust);
 	}
-	private static class AddCustomer{
 
-		public int execute(Customers cust) throws SQLException{
+	private static class AddCustomer {
+
+		public int execute(Customers cust) throws SQLException {
 			String sql = "INSERT into customers " +
 					"(Customer_ID, " +
 					"Customer_Name, " +
@@ -98,7 +101,7 @@ public class customerDAO {
 					"Last_Update, " +
 					"Last_Updated_By, " +
 					"Division_ID) " +
-					"VALUES (?,?,?,?,?,?,?,?,?,?)" ;
+					"VALUES (?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 			ps.setInt(1, cust.getCustId());
 			ps.setString(2, cust.getCustName());
@@ -116,13 +119,14 @@ public class customerDAO {
 		}
 	}
 
-	public static int updateCust(Customers cust) throws SQLException{
+	public static int updateCust(Customers cust) throws SQLException {
 		UpdateCustomer uc = new UpdateCustomer();
 		return uc.execute(cust);
 	}
-	private static class UpdateCustomer{
 
-		public int execute(Customers cust) throws SQLException{
+	private static class UpdateCustomer {
+
+		public int execute(Customers cust) throws SQLException {
 			String sql = "UPDATE customers " +
 					"SET Customer_Name = ?, " +
 					"Address = ?, " +
@@ -147,11 +151,12 @@ public class customerDAO {
 			return cust.getCustId();
 		}
 	}
+
 	public static int getCustIdFromName(String name) throws SQLException {
 		ObservableList<Customers> custList = getAllCusts();
 		AtomicInteger id = new AtomicInteger();
-		custList.forEach(cust ->{
-			if(name.equals(cust.getCustName())){
+		custList.forEach(cust -> {
+			if (name.equals(cust.getCustName())) {
 				id.set(cust.getCustId());
 			}
 		});

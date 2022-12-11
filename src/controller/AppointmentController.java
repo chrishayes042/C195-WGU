@@ -116,6 +116,7 @@ public class AppointmentController implements Initializable {
 	/**
 	 * Changes the current screen to the add appointment view.
 	 * Calls the switchToAddPage method
+	 *
 	 * @param actionEvent
 	 * @throws IOException
 	 */
@@ -126,8 +127,6 @@ public class AppointmentController implements Initializable {
 	}
 
 
-
-
 	/**
 	 * method to update appointments
 	 *
@@ -135,7 +134,7 @@ public class AppointmentController implements Initializable {
 	 */
 	@FXML
 	private void updateAppointment() throws SQLException {
-		if(textCheck()) {
+		if (textCheck()) {
 			Appointments app = new Appointments();
 			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 			LocalDate ldStart = startDatePicker.getValue();
@@ -199,9 +198,9 @@ public class AppointmentController implements Initializable {
 		deleteAlert.setTitle("Cancel Appointment");
 		deleteAlert.setContentText("Are you sure that you want to cancel this appointment?");
 		Optional<ButtonType> result = deleteAlert.showAndWait();
-		if(!result.isPresent()){
+		if (!result.isPresent()) {
 			// do nothing...
-		} else if (result.get() == buttonType){
+		} else if (result.get() == buttonType) {
 			Appointments app = appTableView.getSelectionModel().getSelectedItem();
 			appointmentDAO.cancelAppointment(app);
 			Alert canceled = new Alert(Alert.AlertType.WARNING);
@@ -210,7 +209,7 @@ public class AppointmentController implements Initializable {
 			canceled.setContentText(message);
 			canceled.showAndWait();
 			clearText();
-		} else if (result.get() == cancelButton){
+		} else if (result.get() == cancelButton) {
 			deleteAlert.close();
 			clearText();
 		}
@@ -279,6 +278,7 @@ public class AppointmentController implements Initializable {
 	 * Method to populate the combo boxes.
 	 * Get contacts from the contactDAO. Uses that to populate the contact names for the combo box.
 	 * Used a lambda expression on line 299 to loop through the custList and add each cust name to a new list to populate a combobox
+	 *
 	 * @throws SQLException
 	 */
 	protected void setComboBoxes() throws SQLException {
@@ -336,7 +336,7 @@ public class AppointmentController implements Initializable {
 	}
 
 	/**
-	 * setTable method.
+	 * setTable method.5
 	 * Gets the Observable list from the appointmentDAO and uses that to populate the table data
 	 *
 	 * @throws SQLException
@@ -366,15 +366,17 @@ public class AppointmentController implements Initializable {
 
 		appTableView.setItems(appList);
 	}
+
 	/**
 	 * Filter the table method. Gets a list of all appointments via getAppointments Method
 	 * Utilizes a lambda to loop through the list to check if the end date is after the start week and before the end week variables
 	 * Adds those Appointments objects to a new list to set the table data
+	 *
 	 * @param e
 	 * @throws SQLException
 	 */
 	@FXML
-	private void filterTableWeekly(ActionEvent e) throws SQLException{
+	private void filterTableWeekly(ActionEvent e) throws SQLException {
 		allRadioButton.setSelected(false);
 		monthlyRadioButton.setSelected(false);
 		ObservableList<Appointments> allAppsList = appointmentDAO.getAppointments();
@@ -383,8 +385,8 @@ public class AppointmentController implements Initializable {
 		LocalDateTime startWeek = LocalDateTime.now().minusWeeks(1);
 		LocalDateTime endWeek = LocalDateTime.now().plusWeeks(1);
 
-		allAppsList.forEach(app ->{
-			if(app.getEnd().isAfter(startWeek) && app.getEnd().isBefore(endWeek)){
+		allAppsList.forEach(app -> {
+			if (app.getEnd().isAfter(startWeek) && app.getEnd().isBefore(endWeek)) {
 				weeklyList.add(app);
 			}
 			appTableView.setItems(weeklyList);
@@ -397,11 +399,12 @@ public class AppointmentController implements Initializable {
 	 * Filter the table method. Gets a list of all appointments via getAppointments Method
 	 * Utilizes a lambda to loop through the list to check if the end date is after the start month and before the end month variables
 	 * Adds those Appointments objects to a new list to set the table data
+	 *
 	 * @param e
 	 * @throws SQLException
 	 */
 	@FXML
-	private void filterTableMonthly(ActionEvent e) throws SQLException{
+	private void filterTableMonthly(ActionEvent e) throws SQLException {
 		allRadioButton.setSelected(false);
 		weeklyRadioButton.setSelected(false);
 		ObservableList<Appointments> allAppsList = appointmentDAO.getAppointments();
@@ -410,8 +413,8 @@ public class AppointmentController implements Initializable {
 		LocalDateTime startMonth = LocalDateTime.now().minusMonths(1);
 		LocalDateTime endMonth = LocalDateTime.now().plusMonths(1);
 
-		allAppsList.forEach(app ->{
-			if(app.getEnd().isAfter(startMonth) && app.getEnd().isBefore(endMonth)){
+		allAppsList.forEach(app -> {
+			if (app.getEnd().isAfter(startMonth) && app.getEnd().isBefore(endMonth)) {
 				monthList.add(app);
 			}
 			appTableView.setItems(monthList);
@@ -428,7 +431,7 @@ public class AppointmentController implements Initializable {
 	@FXML
 	private void textPopulate(javafx.scene.input.MouseEvent mouseEvent) throws SQLException {
 		Appointments app = appTableView.getSelectionModel().getSelectedItem();
-		if(app != null) {
+		if (app != null) {
 			appIdText.setText(String.valueOf(app.getAppointmentID()));
 			appTitleText.setText(app.getAppointmentTitle());
 			appDescText.setText(app.getAppointmentDescription());
@@ -456,7 +459,7 @@ public class AppointmentController implements Initializable {
 	 * Clears the text fields and sets the combo boxes back to first selection
 	 */
 	@FXML
-	private void clearText(){
+	private void clearText() {
 
 		appIdText.setText(null);
 		appTitleText.setText(null);
@@ -474,6 +477,7 @@ public class AppointmentController implements Initializable {
 
 	/**
 	 * Method to switch the current screen to any screen where called
+	 *
 	 * @param event
 	 * @param switchScreen
 	 * @throws IOException
@@ -483,18 +487,19 @@ public class AppointmentController implements Initializable {
 		Parent parent = FXMLLoader.load(getClass().getResource(switchScreen));
 
 		Scene scene = new Scene(parent);
-		Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		window.setScene(scene);
 		window.show();
 	}
 
 	/**
 	 * Exits the current screen when user hits the exit button
+	 *
 	 * @param actionEvent
 	 * @throws IOException
 	 */
 	public void exitWindow(ActionEvent actionEvent) throws IOException {
-		((Stage)(((Button)actionEvent.getSource()).getScene().getWindow())).close();
+		((Stage) (((Button) actionEvent.getSource()).getScene().getWindow())).close();
 	}
 
 
