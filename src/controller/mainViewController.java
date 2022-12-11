@@ -29,6 +29,7 @@ public class mainViewController implements Initializable {
 
 	/**
 	 * initialize method
+	 *
 	 * @throws SQLException
 	 */
 	@Override
@@ -38,6 +39,7 @@ public class mainViewController implements Initializable {
 
 	/**
 	 * method to go to the appointment-view.fxml
+	 *
 	 * @param actionEvent
 	 * @throws IOException
 	 */
@@ -53,6 +55,7 @@ public class mainViewController implements Initializable {
 
 	/**
 	 * Method to open the customer view
+	 *
 	 * @param actionEvent
 	 * @throws IOException
 	 */
@@ -64,7 +67,8 @@ public class mainViewController implements Initializable {
 		stage.setScene(new Scene(root));
 		stage.show();
 	}
+
 	public void exitWindow(ActionEvent actionEvent) throws IOException {
-		((Stage)(((Button)actionEvent.getSource()).getScene().getWindow())).close();
+		((Stage) (((Button) actionEvent.getSource()).getScene().getWindow())).close();
 	}
 }

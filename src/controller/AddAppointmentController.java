@@ -31,6 +31,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * AddAppointemntController class
+ */
 public class AddAppointmentController implements Initializable {
 	@FXML
 	private TextField appIdText;
@@ -60,6 +63,12 @@ public class AddAppointmentController implements Initializable {
 	@FXML
 	private Button exitButton;
 	AppointmentController appC;
+
+	/**
+	 * Initialize method
+	 * @param url
+	 * @param resourceBundle
+	 */
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -74,7 +83,7 @@ public class AddAppointmentController implements Initializable {
 			AtomicInteger i = new AtomicInteger(1);
 			AtomicInteger appId = new AtomicInteger(appsList.size() + 1);
 			appsList.forEach(app -> {
-				if(app.getAppointmentID() != i.get()){
+				if (app.getAppointmentID() != i.get()) {
 					appId.set(i.get());
 				} else {
 					i.getAndIncrement();
@@ -89,10 +98,12 @@ public class AddAppointmentController implements Initializable {
 
 
 	}
+
 	/**
 	 * Method to add a new appointment to the sql server. Sends an Appointment Object to the appointmentDAO.
 	 * Has a text check for errors
 	 * Has check for conflicting appointments
+	 *
 	 * @throws SQLException
 	 */
 	@FXML
@@ -134,14 +145,14 @@ public class AddAppointmentController implements Initializable {
 			app.setContactID(cId);
 			// Check if appointment has same ID or conflicting start date/time
 			int overLap = appointmentDAO.checkAppointmentOverLap(app, false);
-			if(overLap > 0){
+			if (overLap > 0) {
 				Alert alert = new Alert(Alert.AlertType.WARNING);
 				alert.setTitle("This appointment is not allowed");
 				alert.setContentText("The appointment conflicts with appointment ID: " + overLap);
 				alert.showAndWait();
 			} else {
 				int added = appointmentDAO.addNewAppointment(app);
-				if(added > 0){
+				if (added > 0) {
 					Alert addedAlert = new Alert(Alert.AlertType.CONFIRMATION);
 					addedAlert.setTitle("New Appointment Added");
 					addedAlert.setContentText("A new appointment has been added");
@@ -155,6 +166,7 @@ public class AddAppointmentController implements Initializable {
 		}
 
 	}
+
 	/**
 	 * This is the error checker that checks the textfield/datepicker/comboboxes for errors.
 	 * Shows an alert if any errors
@@ -210,7 +222,13 @@ public class AddAppointmentController implements Initializable {
 		}
 		return textCheck;
 	}
-
+	/**
+	 * Method to populate the combo boxes.
+	 * Get contacts from the contactDAO. Uses that to populate the contact names for the combo box.
+	 * Used a lambda expression to loop through the custList and add each cust name to a new list to populate a combobox
+	 *
+	 * @throws SQLException
+	 */
 	protected void setComboBoxes() throws SQLException {
 		// Gets all contacts into list
 		ObservableList<Contacts> contactsList = contactDAO.getAllContacts();
@@ -262,17 +280,25 @@ public class AddAppointmentController implements Initializable {
 		startCombo.getSelectionModel().selectFirst();
 		endCombo.getSelectionModel().selectFirst();
 	}
+	/**
+	 * Exit page method is used to exit the current screen and go to any other fxml view that is set
+	 * @param event
+	 * @param switchScreen
+	 * @throws IOException
+	 */
 	@FXML
 	private void exitPage(javafx.event.ActionEvent event, String switchScreen) throws IOException {
 		Parent parent = FXMLLoader.load(getClass().getResource(switchScreen));
 		Scene scene = new Scene(parent);
-		Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		window.setScene(scene);
 		window.show();
 	}
-
+	/**
+	 * Clears the textboxs and resets the comboboxes
+	 */
 	@FXML
-	private void clearText(){
+	private void clearText() {
 		appTitleText.setText(null);
 		appDescText.setText(null);
 		appLocText.setText(null);
@@ -286,14 +312,19 @@ public class AddAppointmentController implements Initializable {
 		contactNameCombo.getSelectionModel().selectFirst();
 	}
 
-
+	/**
+	 * Exits the current window and goes to the appointment-view
+	 * @param actionEvent
+	 * @throws IOException
+	 */
 	public void exitWindow(ActionEvent actionEvent) throws IOException {
 		Parent parent = FXMLLoader.load(getClass().getResource("/view/appointment-view.fxml"));
 		Scene scene = new Scene(parent);
-		Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+		Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 		window.setScene(scene);
 		window.show();
 	}
+
 	public void exitApplication(ActionEvent event) {
 		Platform.exit();
 	}
