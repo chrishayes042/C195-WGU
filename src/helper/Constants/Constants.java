@@ -15,6 +15,10 @@ public class Constants {
 	public static final String NOVEMBER = "November";
 	public static final String DECEMBER = "December";
 
+	public static final String LOGIN_TXT_PATH = "login_activity.txt";
+	public static final String LOGIN_ATTEMPT = " User login attempt: ";
+	public static final String LOGIN_SUCCESS_STRING = " Login Successful = ";
+
 	public static final int JAN_INT = Integer.parseInt("01");
 	public static final int FEB_INT = Integer.parseInt("02");
 	public static final int MAR_INT = Integer.parseInt("03");
