@@ -1,9 +1,8 @@
 package controller;
 
-import DAO.contactDAO;
-import DAO.countryDAO;
-import DAO.customerDAO;
-import DAO.firstLevelDivisionDAO;
+import DAO.SQLCountryDAO;
+import DAO.SQLCustomerDAO;
+import DAO.SQLFirstLevelDivisionDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,21 +15,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import model.Appointments;
 import model.Customers;
 import model.FirstLevelDivision;
-import org.w3c.dom.Text;
+import service.CountryService;
+import service.CustomerService;
+import service.FirstLevelDivisionService;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class customerController implements Initializable {
+public class CustomerController implements Initializable {
 	@FXML
 	private TableView<Customers> custTableView;
 	@FXML
@@ -81,7 +78,7 @@ public class customerController implements Initializable {
 	 * @throws SQLException
 	 */
 	void setTable() throws SQLException{
-		ObservableList<Customers> custList = customerDAO.getAllCusts();
+		ObservableList<Customers> custList = CustomerService.getAllCusts();
 		custId.setCellValueFactory(new PropertyValueFactory<>("custId"));
 		custName.setCellValueFactory(new PropertyValueFactory<>("custName"));
 		address.setCellValueFactory(new PropertyValueFactory<>("address"));
@@ -113,7 +110,7 @@ public class customerController implements Initializable {
 			// do nothing...
 		} else if (result.get() == buttonType){
 			Customers cust = custTableView.getSelectionModel().getSelectedItem();
-			customerDAO.deleteCustomer(cust);
+			CustomerService.deleteCustomer(cust);
 			Alert deleted = new Alert(Alert.AlertType.INFORMATION);
 			String message = "Customer ID: " + cust.getCustId() + "has been deleted";
 			deleted.setContentText(message);
@@ -139,7 +136,7 @@ public class customerController implements Initializable {
 	}
 
 	void setComboBoxes() throws SQLException{
-		ObservableList<FirstLevelDivision> fldList = firstLevelDivisionDAO.getAllDivisions();
+		ObservableList<FirstLevelDivision> fldList = FirstLevelDivisionService.getAllDivisions();
 		ObservableList<String> idList = FXCollections.observableArrayList();
 		idList.add("Select...");
 		fldList.forEach(fld->{
@@ -175,7 +172,7 @@ public class customerController implements Initializable {
 			}
 
 			int id = cust.getDivisionId();
-			FirstLevelDivision fld = firstLevelDivisionDAO.getDivisionById(id, " ", false);
+			FirstLevelDivision fld = FirstLevelDivisionService.getSingleDivision(id, " ", false);
 			custDivisionIdCombo.getSelectionModel().select(fld.getDivision());
 		}
 	}
@@ -236,12 +233,12 @@ public class customerController implements Initializable {
 			updateCust.setAddress(custAddrText.getText().trim());
 
 			String comboDivision = custDivisionIdCombo.getSelectionModel().getSelectedItem();
-			FirstLevelDivision division = firstLevelDivisionDAO.getDivisionById(0, comboDivision, true);
+			FirstLevelDivision division = FirstLevelDivisionService.getSingleDivision(0, comboDivision, true);
 
 			updateCust.setDivisionId(division.getDivisionId());
 
 			int countryId = division.getCountryId();
-			String country = countryDAO.getCountryByID(countryId);
+			String country = CountryService.getCountryByID(countryId);
 			StringBuilder sb = new StringBuilder();
 			sb.append(country);
 			sb.append(" address: ");
@@ -253,7 +250,7 @@ public class customerController implements Initializable {
 			updateCust.setCreatedBy("User");
 			updateCust.setLastUpdtUser(updateCust.getCreatedBy());
 
-			int updated = customerDAO.updateCust(updateCust);
+			int updated = CustomerService.updateCust(updateCust);
 			if (updated > 0) {
 				setTable();
 				Alert addedAlert = new Alert(Alert.AlertType.CONFIRMATION);

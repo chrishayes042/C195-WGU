@@ -14,6 +14,7 @@ public class Logger {
 		try{
 			BufferedWriter bw = new BufferedWriter(new FileWriter(Constants.LOGIN_TXT_PATH, true));
 			bw.append(ZonedDateTime.now(ZoneOffset.UTC).toString())
+					.append(" UTC")
 					.append(Constants.LOGIN_ATTEMPT)
 					.append(userName)
 					.append(Constants.LOGIN_SUCCESS_STRING)

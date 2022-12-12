@@ -4,6 +4,7 @@ import helper.JDBC;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Users;
+import service.UserService;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,9 +12,9 @@ import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class userDAO {
+public class SQLUserDAO implements UserService {
 
-	public int validateUsers(String userName, String pass) throws SQLException{
+	public static int validateUsers(String userName, String pass) throws SQLException{
 		ValidateUsers vu = new ValidateUsers();
 		return vu.execute(userName, pass);
 	}
@@ -58,7 +59,7 @@ public class userDAO {
 				users.setPassWord(rs.getString(3));
 				users.setCreatedDate(rs.getTimestamp(4).toLocalDateTime());
 				users.setCreatedBy(rs.getString(5));
-				users.setLastUpDtTs(rs.getTimestamp(6));
+				users.setLastUpDtTs(rs.getTimestamp(6).toLocalDateTime());
 				users.setCreatedBy(rs.getString(7));
 				userList.addAll(users);
 			}

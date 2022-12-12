@@ -1,9 +1,9 @@
 package controller;
 
-import DAO.appointmentDAO;
-import DAO.contactDAO;
-import DAO.customerDAO;
-import DAO.userDAO;
+import DAO.SQLAppointmentDAO;
+import DAO.SQLContactDAO;
+import DAO.SQLCustomerDAO;
+import DAO.SQLUserDAO;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,6 +20,10 @@ import model.Appointments;
 import model.Contacts;
 import model.Customers;
 import model.Users;
+import service.AppointmentService;
+import service.ContactService;
+import service.CustomerService;
+import service.UserService;
 
 import java.io.IOException;
 import java.net.URL;
@@ -74,7 +78,7 @@ public class AddAppointmentController implements Initializable {
 
 		try {
 			setComboBoxes();
-			ObservableList<Appointments> appsList = appointmentDAO.getAppointments();
+			ObservableList<Appointments> appsList = AppointmentService.getAppointments();
 			ObservableList<Integer> appIdList = FXCollections.observableArrayList();
 
 			appsList.forEach(app -> {
@@ -109,9 +113,9 @@ public class AddAppointmentController implements Initializable {
 	@FXML
 	private void addAppointment(javafx.event.ActionEvent event) throws SQLException, IOException {
 
-		ObservableList<Appointments> appsList = appointmentDAO.getAppointments();
-		ObservableList<Contacts> contactsList = contactDAO.getAllContacts();
-		ObservableList<Users> userList = userDAO.getAllUsers();
+		ObservableList<Appointments> appsList = AppointmentService.getAppointments();
+		ObservableList<Contacts> contactsList = ContactService.getAllContacts();
+		ObservableList<Users> userList = UserService.getAllUsers();
 		Appointments app = new Appointments();
 
 		if (textCheck()) {
@@ -130,28 +134,23 @@ public class AddAppointmentController implements Initializable {
 
 			app.setStart(ldtStart);
 			app.setEnd(ldtEnd);
-			int custId = customerDAO.getCustIdFromName(custIdCombo.getSelectionModel().getSelectedItem());
-			app.setCustomerID(custId);
-			int userId = userDAO.findUserIdFromName(userIdCombo.getSelectionModel().getSelectedItem());
-			app.setUserID(userId);
+			app.setCustomerID(CustomerService.getCustIdFromName(custIdCombo.getSelectionModel().getSelectedItem()));
+			app.setUserID(UserService.findUserIdFromName(userIdCombo.getSelectionModel().getSelectedItem()));
 
-			int user = Integer.parseInt(userIdCombo.getSelectionModel().getSelectedItem());
-			String userName = userDAO.findUserNameFromId(user);
+			String userName = UserService.findUserNameFromId(Integer.parseInt(userIdCombo.getSelectionModel().getSelectedItem()));
 			app.setCreatedBy(userName);
 			app.setLastUpdtUser(userName);
 
-			String contactName = contactNameCombo.getSelectionModel().getSelectedItem();
-			int cId = contactDAO.findContactId(contactName);
-			app.setContactID(cId);
+			app.setContactID(ContactService.findContactId(contactNameCombo.getSelectionModel().getSelectedItem()));
 			// Check if appointment has same ID or conflicting start date/time
-			int overLap = appointmentDAO.checkAppointmentOverLap(app, false);
-			if (overLap > 0) {
+			Appointments overLap = AppointmentService.checkAppointmentOverLap(app, false);
+			if (overLap != null) {
 				Alert alert = new Alert(Alert.AlertType.WARNING);
 				alert.setTitle("This appointment is not allowed");
-				alert.setContentText("The appointment conflicts with appointment ID: " + overLap);
+				alert.setContentText("The appointment conflicts with appointment ID: " + overLap.getAppointmentID() + " " + overLap.getAppointmentType());
 				alert.showAndWait();
 			} else {
-				int added = appointmentDAO.addNewAppointment(app);
+				int added = AppointmentService.addNewAppointment(app);
 				if (added > 0) {
 					Alert addedAlert = new Alert(Alert.AlertType.CONFIRMATION);
 					addedAlert.setTitle("New Appointment Added");
@@ -231,7 +230,7 @@ public class AddAppointmentController implements Initializable {
 	 */
 	protected void setComboBoxes() throws SQLException {
 		// Gets all contacts into list
-		ObservableList<Contacts> contactsList = contactDAO.getAllContacts();
+		ObservableList<Contacts> contactsList = ContactService.getAllContacts();
 		// create new list of Strings to add to the combo box
 		ObservableList<String> contactNameComboList = FXCollections.observableArrayList();
 		// add first item
@@ -243,14 +242,14 @@ public class AddAppointmentController implements Initializable {
 		// Make first selection default
 		contactNameCombo.getSelectionModel().selectFirst();
 
-		ObservableList<Customers> custList = customerDAO.getAllCusts();
+		ObservableList<Customers> custList = CustomerService.getAllCusts();
 		ObservableList<String> custNameList = FXCollections.observableArrayList();
 		custNameList.add("Select...");
 		custList.forEach(cust -> custNameList.add(String.valueOf(cust.getCustName())));
 		custIdCombo.setItems(custNameList);
 		custIdCombo.getSelectionModel().selectFirst();
 
-		ObservableList<Users> userList = userDAO.getAllUsers();
+		ObservableList<Users> userList = UserService.getAllUsers();
 		ObservableList<String> userNameList = FXCollections.observableArrayList();
 		userNameList.add("Select...");
 		userList.forEach(users -> userNameList.add(String.valueOf(users.getUserName())));

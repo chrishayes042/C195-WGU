@@ -5,12 +5,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Countries;
 import model.FirstLevelDivision;
+import service.FirstLevelDivisionService;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class firstLevelDivisionDAO {
+public class SQLFirstLevelDivisionDAO implements FirstLevelDivisionService {
 
 	/**
 	 * Method that is called to call the execute method
@@ -45,7 +46,7 @@ public class firstLevelDivisionDAO {
 				fld.setDivision(rs.getString(2));
 				fld.setCreatedDate(rs.getTimestamp(3).toLocalDateTime());
 				fld.setCreatedBy(rs.getString(4));
-				fld.setLastUpDtTs(rs.getTimestamp(5));
+				fld.setLastUpDtTs(rs.getTimestamp(5).toLocalDateTime());
 				fld.setLastUpdtUser(rs.getString(6));
 				fld.setCountryId(rs.getInt(7));
 
@@ -99,7 +100,7 @@ public class firstLevelDivisionDAO {
 	 * @return FirstLevelDivision object
 	 * @throws SQLException
 	 */
-	public static FirstLevelDivision getDivisionById(int id, String div, boolean isDivisionName) throws SQLException{
+	public static FirstLevelDivision getSingleDivision(int id, String div, boolean isDivisionName) throws SQLException{
 		FindDivisionById fd = new FindDivisionById();
 		return fd.execute(id, div, isDivisionName);
 	}

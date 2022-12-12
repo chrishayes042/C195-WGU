@@ -10,7 +10,7 @@ public class Users {
     private String passWord;
     private LocalDateTime createdDate;
     private String createdBy;
-    private Timestamp lastUpDtTs;
+    private LocalDateTime lastUpDtTs;
     private String lastUpDtUser;
 
 
@@ -44,10 +44,10 @@ public class Users {
     public void setCreatedBy(String createdBy){
         this.createdBy = createdBy;
     }
-    public Timestamp getLastUpDtTs(){
+    public LocalDateTime getLastUpDtTs(){
         return lastUpDtTs;
     }
-    public void setLastUpDtTs(Timestamp ts){
+    public void setLastUpDtTs(LocalDateTime ts){
         this.lastUpDtTs = ts;
     }
     public String getLastUpDtUser(){

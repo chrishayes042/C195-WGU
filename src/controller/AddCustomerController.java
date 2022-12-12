@@ -1,8 +1,8 @@
 package controller;
 
-import DAO.countryDAO;
-import DAO.customerDAO;
-import DAO.firstLevelDivisionDAO;
+import DAO.SQLCountryDAO;
+import DAO.SQLCustomerDAO;
+import DAO.SQLFirstLevelDivisionDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,6 +19,9 @@ import javafx.stage.Stage;
 import model.Countries;
 import model.Customers;
 import model.FirstLevelDivision;
+import service.CountryService;
+import service.CustomerService;
+import service.FirstLevelDivisionService;
 
 import java.io.IOException;
 import java.net.URL;
@@ -53,7 +56,7 @@ public class AddCustomerController implements Initializable {
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		try {
 			setComboBoxes();
-			ObservableList<Customers> custList = customerDAO.getAllCusts();
+			ObservableList<Customers> custList = CustomerService.getAllCusts();
 			ObservableList<Integer> idList = FXCollections.observableArrayList();
 			custList.forEach(customers -> {
 				idList.add(customers.getCustId());
@@ -91,15 +94,26 @@ public class AddCustomerController implements Initializable {
 		if(textCheck()){
 			newCust.setCustId(Integer.parseInt(custIdText.getText().trim()));
 			newCust.setCustName(custNameText.getText().trim());
-			newCust.setAddress(custAddrText.getText().trim());
 			newCust.setPostalCode(custZipText.getText().trim());
 			newCust.setPhone(custPhoneText.getText().trim());
-			newCust.setDivisionId(Integer.parseInt(custDivisionIdCombo.getSelectionModel().getSelectedItem()));
+			FirstLevelDivision fld = FirstLevelDivisionService.getSingleDivision(0, custDivisionIdCombo.getSelectionModel().getSelectedItem(), true);
+			newCust.setDivisionId(fld.getDivisionId());
 
 			newCust.setCreatedBy("User");
 			newCust.setLastUpdtUser(newCust.getCreatedBy());
 
-			int added = customerDAO.addNewCustomer(newCust);
+			int countryId = fld.getCountryId();
+			String country = CountryService.getCountryByID(countryId);
+			StringBuilder sb = new StringBuilder();
+			sb.append(country);
+			sb.append(" address: ");
+			String address = custAddrText.getText().trim();
+			sb.append(address);
+			sb.append(", ").append(fld.getDivision());
+			newCust.setAddress(sb.toString());
+
+
+			int added = CustomerService.addNewCustomer(newCust);
 			if(added > 0){
 				Alert addedAlert = new Alert(Alert.AlertType.CONFIRMATION);
 				addedAlert.setTitle("New Customer Added");
@@ -134,7 +148,7 @@ public class AddCustomerController implements Initializable {
 	 */
 	void setComboBoxes() throws SQLException{
 
-		ObservableList<Countries> cList = countryDAO.getAllCountries();
+		ObservableList<Countries> cList = CountryService.getAllCountries();
 		ObservableList<String> cStringList = FXCollections.observableArrayList();
 		cStringList.add("Select Country...");
 		cList.forEach(c ->{
@@ -207,7 +221,7 @@ public class AddCustomerController implements Initializable {
 	@FXML
 	private void filterComboBox() throws SQLException {
 		if(countryListCombo.getSelectionModel().isSelected(0)){
-			ObservableList<FirstLevelDivision> fldList = firstLevelDivisionDAO.getAllDivisions();
+			ObservableList<FirstLevelDivision> fldList = FirstLevelDivisionService.getAllDivisions();
 			ObservableList<String> divList = FXCollections.observableArrayList();
 			divList.add("Select...");
 			fldList.forEach(fld->{
@@ -217,14 +231,14 @@ public class AddCustomerController implements Initializable {
 			custDivisionIdCombo.setItems(divList);
 			custDivisionIdCombo.getSelectionModel().selectFirst();
 		} else {
-			ObservableList<Countries> cList = countryDAO.getAllCountries();
+			ObservableList<Countries> cList = CountryService.getAllCountries();
 			AtomicInteger cId = new AtomicInteger();
 			cList.forEach(c -> {
 				if(c.getCountry().equals(countryListCombo.getSelectionModel().getSelectedItem())){
 					cId.set(c.getCountryId());
 				}
 			});
-			ObservableList<FirstLevelDivision> fldList = firstLevelDivisionDAO.getFldDivisionById(cId.get());
+			ObservableList<FirstLevelDivision> fldList = FirstLevelDivisionService.getFldDivisionById(cId.get());
 			ObservableList<String> divList = FXCollections.observableArrayList();
 			divList.add("Select...");
 			fldList.forEach(fld -> {

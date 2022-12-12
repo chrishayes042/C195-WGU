@@ -4,13 +4,14 @@ import helper.JDBC;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Countries;
+import service.CountryService;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLRecoverableException;
 
-public class countryDAO {
+public class SQLCountryDAO implements CountryService {
 	/**
 	 * Method that is called to get all of the countries from the sql table
 	 * Instantiates the FindAllCountries class and calls the execute method which returns a list

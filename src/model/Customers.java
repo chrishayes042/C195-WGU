@@ -11,7 +11,7 @@ public class Customers {
     private String phone;
     private LocalDateTime createdDate;
     private String createdBy;
-    private Timestamp lastUpdtTs;
+    private LocalDateTime lastUpdtTs;
     private String lastUpdtUser;
     private int divisionId;
     private String Division;
@@ -90,11 +90,11 @@ public class Customers {
         this.createdBy = createdBy;
     }
 
-    public Timestamp getLastUpdtTs() {
+    public LocalDateTime getLastUpdtTs() {
         return lastUpdtTs;
     }
 
-    public void setLastUpdtTs(Timestamp lastUpdtTs) {
+    public void setLastUpdtTs(LocalDateTime lastUpdtTs) {
         this.lastUpdtTs = lastUpdtTs;
     }
 

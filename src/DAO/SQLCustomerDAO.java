@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Appointments;
 import model.Customers;
+import service.CustomerService;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +14,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class customerDAO {
+public class SQLCustomerDAO implements CustomerService {
 
 	public static ObservableList<Customers> getAllCusts() throws SQLException {
 		FindAllCustomers fac = new FindAllCustomers();
@@ -38,7 +39,7 @@ public class customerDAO {
 				cust.setPhone(rs.getString(5));
 				cust.setCreatedDate(rs.getTimestamp(6).toLocalDateTime());
 				cust.setCreatedBy(rs.getString(7));
-				cust.setLastUpdtTs(rs.getTimestamp(8));
+				cust.setLastUpdtTs(rs.getTimestamp(8).toLocalDateTime());
 				cust.setLastUpdtUser(rs.getString(9));
 				cust.setDivisionId(rs.getInt(10));
 				custList.addAll(cust);
@@ -58,11 +59,11 @@ public class customerDAO {
 	 */
 	public static void deleteCustomer(Customers cust) throws SQLException {
 
-		ObservableList<Appointments> appList = appointmentDAO.getAppointments();
+		ObservableList<Appointments> appList = SQLAppointmentDAO.getAppointments();
 		appList.forEach(app -> {
 			if (cust.getCustId() == app.getCustomerID()) {
 				try {
-					appointmentDAO.cancelAppointment(app);
+					SQLAppointmentDAO.cancelAppointment(app);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

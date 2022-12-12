@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 /**
  * Main controller class for the main-view.fxml
  */
-public class mainViewController implements Initializable {
+public class MainViewController implements Initializable {
 	@FXML
 	private Button appointmentButton;
 

@@ -1,7 +1,7 @@
 package controller;
 
-import DAO.appointmentDAO;
-import DAO.userDAO;
+import DAO.SQLAppointmentDAO;
+import DAO.SQLUserDAO;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,6 +14,8 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Appointments;
 import helper.logger.Logger;
+import service.AppointmentService;
+import service.UserService;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,7 +41,6 @@ public class LoginController implements Initializable {
 	@FXML
 	private TextField pass;
 	ResourceBundle resourceBundle;
-	userDAO ud = new userDAO();
 	private int userId;
 	private Locale locale = Locale.getDefault();
 	private LocalDateTime currentPlus15 = LocalDateTime.now().plusMinutes(15);
@@ -59,7 +60,7 @@ public class LoginController implements Initializable {
 	@FXML
 	public void validateUsers(ActionEvent event) throws IOException, SQLException {
 		String userName = userNameText.getText().trim();
-		userId = ud.validateUsers(userNameText.getText().trim(), pass.getText().trim());
+		userId = UserService.validateUsers(userNameText.getText().trim(), pass.getText().trim());
 		boolean userValidate = validateUser(userId);
 		Logger.loginLog(userName, userValidate);
 		Locale.setDefault(locale);
@@ -111,14 +112,14 @@ public class LoginController implements Initializable {
 	}
 
 	private boolean validateUser(int userId) throws SQLException{
-		userId = ud.validateUsers(userNameText.getText().trim(), pass.getText().trim());
+		userId = UserService.validateUsers(userNameText.getText().trim(), pass.getText().trim());
 		boolean user = false;
 		user = userId > 0;
 		return user;
 	}
 
 	private Appointments userHasAppointment(int userId, LocalDateTime currentTimePlus15, LocalDateTime currentTimeMin15) throws SQLException, IOException {
-		ObservableList<Appointments> appList = appointmentDAO.getAppointments();
+		ObservableList<Appointments> appList = AppointmentService.getAppointments();
 		Appointments appoint = new Appointments();
 		AtomicBoolean hasApp = new AtomicBoolean(false);
 		appList.forEach(app -> {

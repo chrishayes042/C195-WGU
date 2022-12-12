@@ -4,25 +4,18 @@ import helper.JDBC;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Appointments;
+import service.AppointmentService;
 
-import java.io.DataOutput;
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.zone.ZoneRules;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * DAO class for the Appointments
  */
-public class appointmentDAO {
+public class SQLAppointmentDAO implements AppointmentService {
 	/**
 	 * Method that gets called to instantiate the FindAllAppointments class to call the execute method.
 	 * @return ObservableList
@@ -229,25 +222,32 @@ public class appointmentDAO {
 	 * @return Integer
 	 * @throws SQLException
 	 */
-	public static int checkAppointmentOverLap(Appointments app, boolean isUpdate) throws SQLException {
+	public static Appointments checkAppointmentOverLap(Appointments app, boolean isUpdate) throws SQLException {
 		ObservableList<Appointments> list = getAppointments();
-		AtomicInteger check = new AtomicInteger(-1);
-		list.forEach(appointments -> {
+		Appointments appointment = null;
 
+		for(Appointments appointments : list){
 			if (!isUpdate) {
 				if (app.getStart().equals(appointments.getStart()) ||
-					(app.getStart().isAfter(appointments.getStart()) && app.getStart().isBefore(appointments.getEnd()))) {
-					check.set(appointments.getAppointmentID());
+						(app.getStart().isAfter(appointments.getStart()) && app.getStart().isBefore(appointments.getEnd()))) {
+
+					appointment = (appointments);
 				}
 			} else {
-				if (app.getStart().equals(appointments.getStart()) ||
-						(app.getStart().isAfter(appointments.getStart()) && app.getStart().isBefore(appointments.getEnd()))) {
-					check.set(appointments.getAppointmentID());
+				if(app.getAppointmentID() != appointments.getAppointmentID()){
+					if (app.getStart().equals(appointments.getStart()) ||
+							(app.getStart().isAfter(appointments.getStart()) &&
+									app.getStart().isBefore(appointments.getEnd()))) {
+
+						appointment = (appointments);
+					}
 				}
 			}
+		}
 
-		});
-		return check.get();
+		return appointment;
+
+
 	}
 
 }
