@@ -68,6 +68,15 @@ public class MainViewController implements Initializable {
 		stage.show();
 	}
 
+	public void goToReportView(javafx.event.ActionEvent actionEvent) throws IOException{
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/reports-view.fxml"));
+		Parent root = (Parent) fxmlLoader.load();
+		Stage stage = new Stage();
+		stage.setTitle("Reports");
+		stage.setScene(new Scene(root));
+		stage.show();
+	}
+
 	public void exitWindow(ActionEvent actionEvent) throws IOException {
 		((Stage) (((Button) actionEvent.getSource()).getScene().getWindow())).close();
 	}
