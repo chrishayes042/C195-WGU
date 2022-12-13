@@ -5,7 +5,12 @@ import javafx.collections.ObservableList;
 import model.Customers;
 
 import java.sql.SQLException;
-
+/**
+ * Service class to the SQLCustomerDAO class
+ * I added a service layer to make the code more secure as it does not touch the database and easier to read and follow the methods.
+ * If the application were more complex, one would add the business logic in the methods.
+ * Each method in the DAO class would be added here to be called throughout the application
+ */
 public interface CustomerService {
 	/**
 	 * Method used to get a list of all the customers from the sql table

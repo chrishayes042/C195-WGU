@@ -6,6 +6,12 @@ import model.Appointments;
 
 import java.sql.SQLException;
 
+/**
+ * Service class to the SQLAppointmentDAO class
+ * I added a service layer to make the code more secure as it does not touch the database and easier to read and follow the methods.
+ * If the application were more complex, one would add the business logic in the methods.
+ * Each method in the DAO class would be added here to be called throughout the application
+ */
 public interface AppointmentService {
 	/**
 	 * Method to return all appointments from the sql table
@@ -46,14 +52,42 @@ public interface AppointmentService {
 	}
 
 	/**
-	 * Method to check for overlap in appointments
+	 * Method to check for appointment overlaps.
+	 * Parameters takes in the Appointments Object and a boolean to check if it's an update or not.
+	 * Creates a list of all appointments in the DB via getAppointments method.
+	 * Utilizes a lambda expression to loop through each appointment in the list to check the start time and the appointment ID for doubles
+	 * or in between the start and end times.
+	 * Will return the appointment id of a match so the user can see which appointment is overlapped.
 	 * @param app
 	 * @param isUpdate
-	 * @return
+	 * @return Integer
 	 * @throws SQLException
 	 */
 	public static Appointments checkAppointmentOverLap(Appointments app, boolean isUpdate) throws SQLException{
-		return SQLAppointmentDAO.checkAppointmentOverLap(app, isUpdate);
+
+		ObservableList<Appointments> list = getAppointments();
+		Appointments appointment = null;
+
+		for(Appointments appointments : list){
+			if (!isUpdate) {
+				if (app.getStart().equals(appointments.getStart()) ||
+						(app.getStart().isAfter(appointments.getStart()) && app.getStart().isBefore(appointments.getEnd()))) {
+
+					appointment = (appointments);
+				}
+			} else {
+				if(app.getAppointmentID() != appointments.getAppointmentID()){
+					if (app.getStart().equals(appointments.getStart()) ||
+							(app.getStart().isAfter(appointments.getStart()) &&
+									app.getStart().isBefore(appointments.getEnd()))) {
+
+						appointment = (appointments);
+					}
+				}
+			}
+		}
+
+		return appointment;
 	}
 
 }
