@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="213.0" prefWidth="642.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.mainViewController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="213.0" prefWidth="642.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainViewController">
    <children>
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="213.0" prefWidth="642.0">
           <children>
@@ -16,7 +16,7 @@
               </Label>
               <Button fx:id="appointmentButton" layoutX="274.0" layoutY="56.0" mnemonicParsing="false" onAction="#goToAppointmentsPage" text="Appointments" />
               <Button fx:id="custButton" layoutX="284.0" layoutY="94.0" mnemonicParsing="false" onAction="#goToCustPage" text="Customers" />
-              <Button fx:id="reportsButton" layoutX="292.0" layoutY="136.0" mnemonicParsing="false" text="Reports" />
+              <Button fx:id="reportsButton" layoutX="292.0" layoutY="136.0" mnemonicParsing="false" text="Reports" onAction="#goToReportView"/>
               <Button fx:id="exitButton" layoutX="30.0" layoutY="168.0" mnemonicParsing="false" text="Exit" onAction="#exitWindow"/>
           </children>
       </AnchorPane>
