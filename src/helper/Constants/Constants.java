@@ -19,16 +19,18 @@ public class Constants {
 	public static final String LOGIN_ATTEMPT = " User login attempt: ";
 	public static final String LOGIN_SUCCESS_STRING = " Login Successful = ";
 
-	public static final int JAN_INT = Integer.parseInt("01");
-	public static final int FEB_INT = Integer.parseInt("02");
-	public static final int MAR_INT = Integer.parseInt("03");
-	public static final int APR_INT = Integer.parseInt("04");
-	public static final int MAY_INT = Integer.parseInt("05");
-	public static final int JUNE_INT = Integer.parseInt("06");
-	public static final int JULY_INT = Integer.parseInt("07");
-	public static final int AUG_INT = Integer.parseInt("08");
-	public static final int SEP_INT = Integer.parseInt("09");
+	public static final int JAN_INT = 1;
+	public static final int FEB_INT = 2;
+	public static final int MAR_INT = 3;
+	public static final int APR_INT = 4;
+	public static final int MAY_INT = 5;
+	public static final int JUNE_INT = 6;
+	public static final int JULY_INT = 7;
+	public static final int AUG_INT = 8;
+	public static final int SEP_INT = 9;
 	public static final int OCT_INT = 10;
 	public static final int NOV_INT = 11;
 	public static final int DEC_INT = 12;
+
+
 }
