@@ -4,6 +4,7 @@ import helper.JDBC;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Appointments;
+import model.Reports;
 import service.AppointmentService;
 
 import java.sql.PreparedStatement;
@@ -13,7 +14,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 /**
- * DAO class for the Appointments
+ * DAO class for the Appointments only class that will touch the DB
  */
 public class SQLAppointmentDAO implements AppointmentService {
 	/**
@@ -209,47 +210,30 @@ public class SQLAppointmentDAO implements AppointmentService {
 			ps.executeUpdate();
 		}
 	}
-
-	/**
-	 * Method to check for appointment overlaps.
-	 * Parameters takes in the Appointments Object and a boolean to check if it's an update or not.
-	 * Creates a list of all appointments in the DB via getAppointments method.
-	 * Utilizes a lambda expression to loop through each appointment in the list to check the start time and the appointment ID for doubles
-	 * or in between the start and end times.
-	 * Will return the appointment id of a match so the user can see which appointment is overlapped.
-	 * @param app
-	 * @param isUpdate
-	 * @return Integer
-	 * @throws SQLException
-	 */
-	public static Appointments checkAppointmentOverLap(Appointments app, boolean isUpdate) throws SQLException {
-		ObservableList<Appointments> list = getAppointments();
-		Appointments appointment = null;
-
-		for(Appointments appointments : list){
-			if (!isUpdate) {
-				if (app.getStart().equals(appointments.getStart()) ||
-						(app.getStart().isAfter(appointments.getStart()) && app.getStart().isBefore(appointments.getEnd()))) {
-
-					appointment = (appointments);
-				}
-			} else {
-				if(app.getAppointmentID() != appointments.getAppointmentID()){
-					if (app.getStart().equals(appointments.getStart()) ||
-							(app.getStart().isAfter(appointments.getStart()) &&
-									app.getStart().isBefore(appointments.getEnd()))) {
-
-						appointment = (appointments);
-					}
-				}
-			}
-		}
-
-		return appointment;
-
-
-	}
-
+//
+//	public static ObservableList<Reports> getContactReportList()throws SQLException{
+//		FindContactReportList fcpl = new FindContactReportList();
+//		return fcpl.execte();
+//	}
+//
+//	private static class FindContactReportList{
+//
+//		public ObservableList<Reports> execte() throws SQLException{
+//			String sql = "SELECT * from appointments a LEFT JOIN contacts c ON a.Contact_ID = c.contact_id";
+//			PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+//			ResultSet rs = ps.executeQuery();
+//			ObservableList<Reports> repList = FXCollections.observableArrayList();
+//			while (rs.next()){
+//				Reports rep = new Reports();
+//				rep.setReportCustId(rs.getInt(1));
+//				rep.setReportAppId(rs.getInt(2));
+//
+//
+//				repList.addAll(rep);
+//			}
+//			return repList;
+//		}
+//	}
 }
 
 
