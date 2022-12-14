@@ -10,6 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * DAO Class for the First Level Division. Only class that will touch the DB.
+ */
 public class SQLFirstLevelDivisionDAO implements FirstLevelDivisionService {
 
 	/**
@@ -24,7 +27,7 @@ public class SQLFirstLevelDivisionDAO implements FirstLevelDivisionService {
 	}
 
 	/**
-	 * Class that holds the execute method
+	 * Class that holds the execute method to find all the divisions in the sql table
 	 */
 	private static class FindAllDivisions{
 
@@ -67,6 +70,10 @@ public class SQLFirstLevelDivisionDAO implements FirstLevelDivisionService {
 		FindIdByName fidbn = new FindIdByName();
 		return fidbn.execute(c);
 	}
+
+	/**
+	 * Class to find the division id by the name
+	 */
 	private static class FindIdByName{
 		/**
 		 * Execute method that creates the sql query and executes it.
@@ -103,6 +110,10 @@ public class SQLFirstLevelDivisionDAO implements FirstLevelDivisionService {
 		FindDivisionById fd = new FindDivisionById();
 		return fd.execute(id, div, isDivisionName);
 	}
+
+	/**
+	 * Class to find the division ID or name
+	 */
 	private static class FindDivisionById{
 		/**
 		 * Execute method that creates the sql query and executes it.

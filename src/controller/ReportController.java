@@ -22,9 +22,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+/**
+ * Report Controller Class
+ */
 public class ReportController implements Initializable {
 
 	@FXML

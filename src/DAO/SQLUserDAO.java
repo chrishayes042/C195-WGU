@@ -12,6 +12,9 @@ import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * DAO Class for the User Data. Only class that will touch the DB.
+ */
 public class SQLUserDAO implements UserService {
 	/**
 	 * Method to validate users credentials.
@@ -26,6 +29,9 @@ public class SQLUserDAO implements UserService {
 		return vu.execute(userName, pass);
 	}
 
+	/**
+	 * Class to Validate User information
+	 */
 	private static class ValidateUsers {
 		/**
 		 * Method to create the sql query and pass it into the database.
@@ -62,6 +68,9 @@ public class SQLUserDAO implements UserService {
 		return fau.execute();
 	}
 
+	/**
+	 * Class to find all the users in the sql table
+	 */
 	private static class FindAllUsers {
 		/**
 		 * Method to create and execute the sql query into the database.

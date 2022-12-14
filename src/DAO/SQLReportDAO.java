@@ -11,6 +11,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * DAO Class for the Report data. Only class that will touch the DB.
+ */
 public class SQLReportDAO  implements ReportService{
 	/**
 	 * Method to call the class to call the execute method
@@ -22,6 +25,9 @@ public class SQLReportDAO  implements ReportService{
 		return fcr.execute();
 	}
 
+	/**
+	 * Class to find the customer reports
+	 */
 	private static class FindCustReport {
 		/**
 		 * Execute method creates the sql string to pass into the sql database.
@@ -101,6 +107,9 @@ public class SQLReportDAO  implements ReportService{
 		return cgd.execute();
 	}
 
+	/**
+	 * Class to get the data for a report
+	 */
 	private static class GetCountryData{
 		/**
 		 * Execute method creates the sql query string to pass into the database.

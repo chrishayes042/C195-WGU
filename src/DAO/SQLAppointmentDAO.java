@@ -26,6 +26,9 @@ public class SQLAppointmentDAO implements AppointmentService {
 		return apps.execute();
 	}
 
+	/**
+	 * Class to find all appointments
+	 */
 	private static class FindAllAppointments {
 		/**
 		 * Execute method. Creates the SQL Query String and passes that to the PreparedStatement to pass into the ResultSet
@@ -75,6 +78,9 @@ public class SQLAppointmentDAO implements AppointmentService {
 		return update.execute(app);
 	}
 
+	/**
+	 * Class to Update an Appointment
+	 */
 	private static class UpdateAppointment {
 		/**
 		 * Execute method creates the update sql query. passes it into the PreparedStatement to be executed. Passes in the
@@ -134,6 +140,9 @@ public class SQLAppointmentDAO implements AppointmentService {
 		return add.execute(app);
 	}
 
+	/**
+	 * Class to add an appointment
+	 */
 	private static class AddAppointment {
 		/**
 		 * Execute method creates the update sql query. passes it into the PreparedStatement to be executed. Passes in the
@@ -196,6 +205,9 @@ public class SQLAppointmentDAO implements AppointmentService {
 		ca.execute(app);
 	}
 
+	/**
+	 * Class to cancel an appointment
+	 */
 	private static class CancelAppointment {
 		/**
 		 * Execute method creates the update sql query. passes it into the PreparedStatement to be executed. Passes in the

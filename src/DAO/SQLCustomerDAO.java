@@ -14,6 +14,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * DAO Class for the Customer. Only class that will touch the DB.
+ */
 public class SQLCustomerDAO implements CustomerService {
 
 	public static ObservableList<Customers> getAllCusts() throws SQLException {
@@ -21,6 +24,9 @@ public class SQLCustomerDAO implements CustomerService {
 		return fac.execute();
 	}
 
+	/**
+	 * Class to find all the customers in the SQL Table
+	 */
 	private static class FindAllCustomers {
 
 		public ObservableList<Customers> execute() throws SQLException {
@@ -74,7 +80,9 @@ public class SQLCustomerDAO implements CustomerService {
 		dc.execute(cust);
 	}
 
-
+	/**
+	 * Class to delete a customer row from the sql table
+	 */
 	private static class DeleteCustomer {
 
 		public void execute(Customers cust) throws SQLException {
@@ -95,6 +103,9 @@ public class SQLCustomerDAO implements CustomerService {
 		return ac.execute(cust);
 	}
 
+	/**
+	 * Class to add a customer row to the sql table
+	 */
 	private static class AddCustomer {
 		/**
 		 * Execute method that creates the sql query and executes it.
@@ -145,6 +156,9 @@ public class SQLCustomerDAO implements CustomerService {
 		return uc.execute(cust);
 	}
 
+	/**
+	 * Class to update a customer row in the sql table
+	 */
 	private static class UpdateCustomer {
 		/**
 		 * Execute method creates the sql query and executes it in the database

@@ -27,6 +27,9 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Add Customer Controller Class
+ */
 public class AddCustomerController implements Initializable {
 
 	@FXML

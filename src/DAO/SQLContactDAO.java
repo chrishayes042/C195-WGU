@@ -12,6 +12,9 @@ import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * DAO class for the Contacts. Only class that will touch the DB
+ */
 public class SQLContactDAO implements ContactService {
 
 
@@ -26,6 +29,9 @@ public class SQLContactDAO implements ContactService {
 		return fac.execute();
 	}
 
+	/**
+	 * Class to find all contacts in the sql table
+	 */
 	private static class FindAllContacts{
 		/**
 		 * The execute method creates the sql string and passes that to the preparedstatement to execute the query.

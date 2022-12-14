@@ -10,6 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * DAO Class for the Country Only class that will touch the DB.
+ */
 public class SQLCountryDAO implements CountryService {
 	/**
 	 * Method that is called to get all of the countries from the sql table
@@ -21,6 +24,10 @@ public class SQLCountryDAO implements CountryService {
 		FindAllCountries fac = new FindAllCountries();
 		return fac.execute();
 	}
+
+	/**
+	 * Class to find all countries in the sql table
+	 */
 	private static class FindAllCountries{
 		/**
 		 * The execute method creates the sql string and passes that to the preparedstatement to execute the query.
@@ -58,6 +65,10 @@ public class SQLCountryDAO implements CountryService {
 		FindCountryById fc = new FindCountryById();
 		return fc.execute(id);
 	}
+
+	/**
+	 * Class to find the country by id
+	 */
 	private static class FindCountryById{
 		/**
 		 * The execute method creates the sql string and passes that to the preparedstatement to execute the query.

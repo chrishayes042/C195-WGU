@@ -1,7 +1,5 @@
 package controller;
 
-import DAO.SQLAppointmentDAO;
-import DAO.SQLUserDAO;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,6 +23,9 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Login Controller Class
+ */
 public class LoginController implements Initializable {
 
 

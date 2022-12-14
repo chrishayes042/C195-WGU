@@ -27,6 +27,9 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * Customer Controller Class
+ */
 public class CustomerController implements Initializable {
 	@FXML
 	private TableView<Customers> custTableView;
