@@ -15,22 +15,22 @@
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="410.0" prefWidth="643.0">
                <children>
-                  <Button layoutX="14.0" layoutY="275.0" mnemonicParsing="false" text="Exit" />
-                  <TableView fx:id="custAppTableView" layoutX="14.0" layoutY="14.0" prefHeight="244.0" prefWidth="284.0">
+                  <Button layoutX="14.0" layoutY="341.0" mnemonicParsing="false" onAction="#exitWindow" text="Exit" />
+                  <TableView fx:id="custAppTableView" layoutX="208.0" layoutY="68.0" prefHeight="244.0" prefWidth="300.0">
                     <columns>
-                      <TableColumn fx:id="custTableAppTypeCol" prefWidth="75.0" text="App Type" />
+                      <TableColumn fx:id="custTableAppTypeCol" prefWidth="125.0" text="App Type" />
                       <TableColumn fx:id="custTableMonthCol" prefWidth="83.0" text="Month" />
-                        <TableColumn fx:id="custTableTotalAppCol" prefWidth="124.0" text="Total Appointments" />
+                        <TableColumn fx:id="custTableTotalAppCol" prefWidth="90.0" text="Total Appointments" />
                     </columns>
                   </TableView>
                </children></AnchorPane>
       </content>
     </Tab>
-    <Tab text="Appointment Schedule" fx:id="appTab">
+    <Tab fx:id="appTab" text="Appointment Schedule">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <TableView fx:id="appSchTableView" layoutX="14.0" layoutY="62.0" prefHeight="257.0" prefWidth="690.0">
+                  <TableView fx:id="appSchTableView" layoutX="14.0" layoutY="62.0" prefHeight="257.0" prefWidth="667.0">
                     <columns>
                       <TableColumn fx:id="contactIdCol" prefWidth="60.0" text="Contact" />
                       <TableColumn fx:id="appIdCol" prefWidth="75.0" text="App ID" />
@@ -39,18 +39,28 @@
                         <TableColumn fx:id="appDescCol" prefWidth="75.0" text="App Desc" />
                         <TableColumn fx:id="appStartCol" prefWidth="111.0" text="App Start" />
                         <TableColumn fx:id="appEndCol" text="App End" />
-                        <TableColumn fx:id="custIdCol" prefWidth="53.0" text="Cust ID" />
+                        <TableColumn fx:id="custIdCol" prefWidth="79.0" text="Cust ID" />
                     </columns>
                   </TableView>
-                  <Button layoutX="14.0" layoutY="331.0" mnemonicParsing="false" text="Exit" />
-                  <ComboBox fx:id="filterCombo" layoutX="14.0" layoutY="26.0" prefWidth="150.0" onAction="#filterBy"/>
+                  <Button layoutX="14.0" layoutY="331.0" mnemonicParsing="false" onAction="#exitWindow" text="Exit" />
+                  <ComboBox fx:id="filterCombo" layoutX="14.0" layoutY="26.0" onAction="#filterBy" prefWidth="150.0" />
                   <Label layoutX="18.0" layoutY="6.0" text="Filter by Contact" />
                </children></AnchorPane>
       </content>
     </Tab>
-      <Tab text="Report...">
+      <Tab text="Customer Location Report">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <TableView fx:id="custCountryTableView" layoutX="68.0" layoutY="90.0" prefHeight="200.0" prefWidth="565.0">
+                    <columns>
+                      <TableColumn fx:id="countryTableNameCol" prefWidth="125.0" text="Customer Name" />
+                      <TableColumn fx:id="countryTableCustLocationCol" prefWidth="175.0" text="Appointment Location" />
+                      <TableColumn fx:id="countryTableCustAddrCol" prefWidth="250.0" text="Customer Address" />
+                    </columns>
+                  </TableView>
+                  <Button layoutX="14.0" layoutY="341.0" mnemonicParsing="false" onAction="#exitWindow" text="Exit" />
+               </children></AnchorPane>
         </content>
       </Tab>
   </tabs>
