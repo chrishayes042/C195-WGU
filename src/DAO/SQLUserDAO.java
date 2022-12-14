@@ -13,14 +13,27 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class SQLUserDAO implements UserService {
-
+	/**
+	 * Method to validate users credentials.
+	 * Instantiates the ValidateUsers class to call the execute method.
+	 * @param userName
+	 * @param pass
+	 * @return Integer
+	 * @throws SQLException
+	 */
 	public static int validateUsers(String userName, String pass) throws SQLException{
 		ValidateUsers vu = new ValidateUsers();
 		return vu.execute(userName, pass);
 	}
 
 	private static class ValidateUsers {
-
+		/**
+		 * Method to create the sql query and pass it into the database.
+		 * @param userName
+		 * @param pass
+		 * @return Integer
+		 * @throws SQLException
+		 */
 		public int execute(String userName, String pass) throws SQLException{
 			try {
 				String sql = "SELECT * FROM users WHERE user_name = '" + userName + "' AND password = '" + pass + "'";
@@ -39,14 +52,23 @@ public class SQLUserDAO implements UserService {
 		}
 	}
 
-
+	/**
+	 * Method used to instatiate the FindAllUsers class to call the execute method.
+	 * @return ObservableList
+	 * @throws SQLException
+	 */
 	public static ObservableList<Users> getAllUsers() throws SQLException {
 		FindAllUsers fau = new FindAllUsers();
 		return fau.execute();
 	}
 
 	private static class FindAllUsers {
-
+		/**
+		 * Method to create and execute the sql query into the database.
+		 * Creates a new Users object and passes it into a new List to return.
+		 * @return Observable List
+		 * @throws SQLException
+		 */
 		public ObservableList<Users> execute() throws SQLException {
 			String sql = "SELECT * from users";
 			PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement(sql);
@@ -67,6 +89,13 @@ public class SQLUserDAO implements UserService {
 		}
 	}
 
+	/**
+	 * Method used to get the user Id by looping through a list of all the users.
+	 * Uses a lambda expression to loop through the list of users to match the Parameter String. Returns the UserID of the match.
+	 * @param name
+	 * @return Integer
+	 * @throws SQLException
+	 */
 	public static int findUserIdFromName(String name) throws SQLException {
 		ObservableList<Users> list = getAllUsers();
 		AtomicInteger userId = new AtomicInteger(-1);
@@ -78,6 +107,13 @@ public class SQLUserDAO implements UserService {
 		return userId.get();
 	}
 
+	/**
+	 * Method used to get the user's name by looping through a list of all the users.
+	 * Uses a lambda expression to loop through the list of users to match the Parameter Integer. Returns the user's name of the match.
+	 * @param id
+	 * @return String
+	 * @throws SQLException
+	 */
 	public static String findUserNameFromId(int id) throws SQLException {
 		ObservableList<Users> list = getAllUsers();
 		AtomicReference<String> name = new AtomicReference<>("");

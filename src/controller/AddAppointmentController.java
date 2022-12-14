@@ -1,9 +1,6 @@
 package controller;
 
-import DAO.SQLAppointmentDAO;
-import DAO.SQLContactDAO;
-import DAO.SQLCustomerDAO;
-import DAO.SQLUserDAO;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -105,17 +102,15 @@ public class AddAppointmentController implements Initializable {
 
 	/**
 	 * Method to add a new appointment to the sql server. Sends an Appointment Object to the appointmentDAO.
-	 * Has a text check for errors
-	 * Has check for conflicting appointments
-	 *
+	 * Has a text check for errors.
+	 * Has check for conflicting appointments.
+	 * Sets the object using the text/comboboxes.
+	 * Alerts user of creation.
 	 * @throws SQLException
 	 */
 	@FXML
 	private void addAppointment(javafx.event.ActionEvent event) throws SQLException, IOException {
 
-		ObservableList<Appointments> appsList = AppointmentService.getAppointments();
-		ObservableList<Contacts> contactsList = ContactService.getAllContacts();
-		ObservableList<Users> userList = UserService.getAllUsers();
 		Appointments app = new Appointments();
 
 		if (textCheck()) {
@@ -294,7 +289,7 @@ public class AddAppointmentController implements Initializable {
 		window.show();
 	}
 	/**
-	 * Clears the textboxs and resets the comboboxes
+	 * Clears the textboxes and resets the comboboxes
 	 */
 	@FXML
 	private void clearText() {

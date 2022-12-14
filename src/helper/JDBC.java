@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Java database connection class
+ */
 public class JDBC {
     private static final String protocol = "jdbc";
     private static final String vendor = ":mysql:";
@@ -18,6 +21,9 @@ public class JDBC {
 
     private static PreparedStatement ps;
 
+    /**
+     * Opens the connection to the sql server
+     */
     public static void openConnection()
     {
         try {

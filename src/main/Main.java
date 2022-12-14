@@ -13,7 +13,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Main extends Application {
-
+    /**
+     * Start method that starts the application window to the login screen
+     * @param stage
+     * @throws IOException
+     */
     @Override
     public void start(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Main.class.getResource("/view/login-view.fxml"));
@@ -23,6 +27,10 @@ public class Main extends Application {
         stage.show();
     }
 
+    /**
+     * Main method that is called to launch the program
+     * @param args
+     */
     public static void main(String[] args) {
         JDBC.openConnection();
         launch(args);

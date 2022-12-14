@@ -8,8 +8,17 @@ import java.io.IOException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
+/**
+ * Logger class that holds the logger method
+ */
 public class Logger {
-
+	/**
+	 * Logger method used to create and write the login_activity.txt file.
+	 * Uses the BufferedWriter api to append and write a single text line in the file
+	 * @param userName
+	 * @param success
+	 * @throws IOException
+	 */
 	public static void loginLog(String userName, Boolean success) throws IOException{
 		try{
 			BufferedWriter bw = new BufferedWriter(new FileWriter(Constants.LOGIN_TXT_PATH, true));

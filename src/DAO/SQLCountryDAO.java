@@ -9,7 +9,6 @@ import service.CountryService;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLRecoverableException;
 
 public class SQLCountryDAO implements CountryService {
 	/**

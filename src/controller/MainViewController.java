@@ -68,6 +68,11 @@ public class MainViewController implements Initializable {
 		stage.show();
 	}
 
+	/**
+	 * Method to open the reports view
+	 * @param actionEvent
+	 * @throws IOException
+	 */
 	public void goToReportView(javafx.event.ActionEvent actionEvent) throws IOException{
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/reports-view.fxml"));
 		Parent root = (Parent) fxmlLoader.load();
@@ -77,6 +82,11 @@ public class MainViewController implements Initializable {
 		stage.show();
 	}
 
+	/** Method to exit the program
+	 *
+	 * @param actionEvent
+	 * @throws IOException
+	 */
 	public void exitWindow(ActionEvent actionEvent) throws IOException {
 		((Stage) (((Button) actionEvent.getSource()).getScene().getWindow())).close();
 	}

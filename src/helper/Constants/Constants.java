@@ -1,5 +1,8 @@
 package helper.Constants;
 
+/**
+ * Class to hold all the constant variables for the program
+ */
 public class Constants {
 
 	public static final String JANUARY = "January";

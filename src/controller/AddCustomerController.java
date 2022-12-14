@@ -1,8 +1,6 @@
 package controller;
 
-import DAO.SQLCountryDAO;
-import DAO.SQLCustomerDAO;
-import DAO.SQLFirstLevelDivisionDAO;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -83,6 +81,7 @@ public class AddCustomerController implements Initializable {
 	 * Add new customer method.
 	 * Uses the text fields to set the attributes for a new Customers object.
 	 * The object is then sent to the DAO via the addNewCustomer method.
+	 * Alerts the user of creation of new table row.
 	 * @param event
 	 * @throws SQLException
 	 * @throws IOException
@@ -165,7 +164,6 @@ public class AddCustomerController implements Initializable {
 	 */
 	@FXML
 	private void clearText(){
-		custIdText.setText(null);
 		custPhoneText.setText(null);
 		custNameText.setText(null);
 		custZipText.setText(null);

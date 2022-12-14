@@ -14,7 +14,7 @@ import java.sql.SQLException;
 public interface FirstLevelDivisionService {
 	/**
 	 * Method used to get a list of all the rows from the sql table
-	 * @return
+	 * @return ObservableList
 	 * @throws SQLException
 	 */
 	public static ObservableList<FirstLevelDivision> getAllDivisions() throws SQLException{
@@ -24,7 +24,7 @@ public interface FirstLevelDivisionService {
 	/**
 	 * Method used to get a list of divisions where the country ID = c
 	 * @param c
-	 * @return
+	 * @return ObservableList
 	 * @throws SQLException
 	 */
 	public static ObservableList<FirstLevelDivision> getFldDivisionById(int c) throws SQLException{
@@ -36,7 +36,7 @@ public interface FirstLevelDivisionService {
 	 * @param id
 	 * @param div
 	 * @param isDivisionName
-	 * @return
+	 * @return FirstLevelDivision Object
 	 * @throws SQLException
 	 */
 	public static FirstLevelDivision getSingleDivision(int id, String div, boolean isDivisionName) throws SQLException{

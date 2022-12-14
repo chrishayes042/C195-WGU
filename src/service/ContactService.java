@@ -14,7 +14,7 @@ import java.sql.SQLException;
 public interface ContactService {
 	/**
 	 * Method used to get a list of all the contacts in the sql table
-	 * @return
+	 * @return ObservableList
 	 * @throws SQLException
 	 */
 	public static ObservableList<Contacts> getAllContacts() throws SQLException{
@@ -24,7 +24,7 @@ public interface ContactService {
 	/**
 	 * Method used to find the ContactID from the sql table where the contact name = name
 	 * @param name
-	 * @return
+	 * @return Integer
 	 * @throws SQLException
 	 */
 	public static int findContactId(String name) throws SQLException{
@@ -34,7 +34,7 @@ public interface ContactService {
 	/**
 	 * Method used to find the contact name from the sql table where the contact id = id
 	 * @param id
-	 * @return
+	 * @return Integer
 	 * @throws SQLException
 	 */
 	public static String findContactName(int id) throws SQLException{

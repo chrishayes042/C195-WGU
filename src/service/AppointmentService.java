@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public interface AppointmentService {
 	/**
 	 * Method to return all appointments from the sql table
-	 * @return
+	 * @return ObservableList
 	 * @throws SQLException
 	 */
 	public static ObservableList<Appointments> getAppointments() throws SQLException{
@@ -25,7 +25,7 @@ public interface AppointmentService {
 	/**
 	 * Method to update an appointment to the sql table
 	 * @param app
-	 * @return
+	 * @return Integer
 	 * @throws SQLException
 	 */
 	public static int updateAppointment(Appointments app) throws SQLException{
@@ -35,7 +35,7 @@ public interface AppointmentService {
 	/**
 	 * Method to create a new appointment and add it to the sql table
 	 * @param app
-	 * @return
+	 * @return Integer
 	 * @throws SQLException
 	 */
 	public static int addNewAppointment(Appointments app) throws SQLException{

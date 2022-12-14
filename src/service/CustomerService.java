@@ -14,7 +14,7 @@ import java.sql.SQLException;
 public interface CustomerService {
 	/**
 	 * Method used to get a list of all the customers from the sql table
-	 * @return
+	 * @return ObservableList
 	 * @throws SQLException
 	 */
 	public static ObservableList<Customers> getAllCusts() throws SQLException{
@@ -33,7 +33,7 @@ public interface CustomerService {
 	/**
 	 * Method used to create a new row on the sql table
 	 * @param cust
-	 * @return
+	 * @return Integer
 	 * @throws SQLException
 	 */
 	public static int addNewCustomer(Customers cust) throws SQLException{
@@ -43,7 +43,7 @@ public interface CustomerService {
 	/**
 	 * Method used to update a row in the sql table
 	 * @param cust
-	 * @return
+	 * @return Integer
 	 * @throws SQLException
 	 */
 	public static int updateCust(Customers cust) throws SQLException{
@@ -53,7 +53,7 @@ public interface CustomerService {
 	/**
 	 * Method used to parse the Customer ID from the Customer Name
 	 * @param name
-	 * @return
+	 * @return Integer
 	 * @throws SQLException
 	 */
 	public static int getCustIdFromName(String name) throws SQLException{

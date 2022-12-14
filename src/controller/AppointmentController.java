@@ -1,9 +1,5 @@
 package controller;
 
-import DAO.SQLAppointmentDAO;
-import DAO.SQLContactDAO;
-import DAO.SQLCustomerDAO;
-import DAO.SQLUserDAO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

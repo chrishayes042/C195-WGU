@@ -74,6 +74,7 @@ public class SQLCustomerDAO implements CustomerService {
 		dc.execute(cust);
 	}
 
+
 	private static class DeleteCustomer {
 
 		public void execute(Customers cust) throws SQLException {
@@ -83,13 +84,25 @@ public class SQLCustomerDAO implements CustomerService {
 		}
 	}
 
+	/**
+	 * Method to add a new customer to the sql table
+	 * @param cust
+	 * @return
+	 * @throws SQLException
+	 */
 	public static int addNewCustomer(Customers cust) throws SQLException {
 		AddCustomer ac = new AddCustomer();
 		return ac.execute(cust);
 	}
 
 	private static class AddCustomer {
-
+		/**
+		 * Execute method that creates the sql query and executes it.
+		 *
+		 * @param cust
+		 * @return
+		 * @throws SQLException
+		 */
 		public int execute(Customers cust) throws SQLException {
 			String sql = "INSERT into customers " +
 					"(Customer_ID, " +
@@ -120,13 +133,25 @@ public class SQLCustomerDAO implements CustomerService {
 		}
 	}
 
+	/**
+	 * Method used to update a customer row in the sql table.
+	 * Instantiates the UpdateCustomer class to call the execute method.
+	 * @param cust
+	 * @return Integer
+	 * @throws SQLException
+	 */
 	public static int updateCust(Customers cust) throws SQLException {
 		UpdateCustomer uc = new UpdateCustomer();
 		return uc.execute(cust);
 	}
 
 	private static class UpdateCustomer {
-
+		/**
+		 * Execute method creates the sql query and executes it in the database
+		 * @param cust
+		 * @return Integer
+		 * @throws SQLException
+		 */
 		public int execute(Customers cust) throws SQLException {
 			String sql = "UPDATE customers " +
 					"SET Customer_Name = ?, " +
@@ -153,15 +178,25 @@ public class SQLCustomerDAO implements CustomerService {
 		}
 	}
 
+	/**
+	 * Method used to get the customer id from the customer name.
+	 * Utilizes a lambda expression to loop through the List to match the customer name to the parameter string
+	 * @param name
+	 * @return Integer
+	 * @throws SQLException
+	 */
 	public static int getCustIdFromName(String name) throws SQLException {
 		ObservableList<Customers> custList = getAllCusts();
 		AtomicInteger id = new AtomicInteger();
-		custList.forEach(cust -> {
-			if (name.equals(cust.getCustName())) {
-				id.set(cust.getCustId());
-			}
-		});
-		return id.get();
+		if(name != null){
+			custList.forEach(cust -> {
+				if (name.equals(cust.getCustName())) {
+					id.set(cust.getCustId());
+				}
+			});
+
+		}
+			return id.get();
 	}
 
 

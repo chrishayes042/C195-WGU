@@ -25,7 +25,8 @@ public class SQLReportDAO  implements ReportService{
 	private static class FindCustReport {
 		/**
 		 * Execute method creates the sql string to pass into the sql database.
-		 *
+		 * The sql query gets the months as an integer.
+		 * Used a switch statement for that int to match which Month it lines up with and set the String to that month
 		 * @return
 		 * @throws SQLException
 		 */
@@ -90,5 +91,38 @@ public class SQLReportDAO  implements ReportService{
 		}
 	}
 
+	/**
+	 * Method used to instantiate the GetCountryData class to call the execute method
+	 * @return ObservableList
+	 * @throws SQLException
+	 */
+	public static ObservableList<Reports> getCountryTableData()throws SQLException{
+		GetCountryData cgd = new GetCountryData();
+		return cgd.execute();
+	}
 
+	private static class GetCountryData{
+		/**
+		 * Execute method creates the sql query string to pass into the database.
+		 * Sets the Reports object and passes it into a list to return.
+		 * @return ObservableList
+		 * @throws SQLException
+		 */
+		public ObservableList<Reports> execute() throws SQLException{
+			String sql = "select Customer_Name, Location, c.Address from appointments as a "+
+							"join customers as c on a.Customer_ID = c.Customer_ID";
+
+			PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			ObservableList<Reports> repList = FXCollections.observableArrayList();
+			while(rs.next()){
+				Reports rep = new Reports();
+				rep.setReportCustName(rs.getString(1));
+				rep.setReportAppMonth(rs.getString(2));
+				rep.setReportAppType(rs.getString(3));
+				repList.addAll(rep);
+			}
+			return repList;
+		}
+	}
 }

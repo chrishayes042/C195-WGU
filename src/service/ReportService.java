@@ -20,11 +20,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public interface ReportService {
 
 
-	// Report that gets the total number of customer appointments by type and month
-
 	/**
 	 * Method to get the report for the total numebr of customer appointments by type and month
-	 * @return
+	 * @return ObservableList
 	 * @throws SQLException
 	 */
 	public static ObservableList<Reports> getReportCustAppByMonth() throws SQLException {
@@ -32,8 +30,11 @@ public interface ReportService {
 		return SQLReportDAO.getCustReports();
 	}
 
-	// Report that gets the schedule for each contact in your org.
-	// includes Appointment ID, Title, type, and description, start, end and custid
+	/**
+	 * Method used to set the report data for the Contact Table
+	 * @return ObservableList
+	 * @throws SQLException
+	 */
 	public static ObservableList<Reports> getReportContactList() throws SQLException {
 		ObservableList<Appointments> appList = SQLAppointmentDAO.getAppointments();
 		ObservableList<Reports> repList = FXCollections.observableArrayList();
@@ -53,7 +54,14 @@ public interface ReportService {
 		return repList;
 
 	}
-	// report that of my choice that differ from the other 2.
 
+	/**
+	 * Method used to get the report data for the customer table
+	 * @return ObservableList
+	 * @throws SQLException
+	 */
+	public static ObservableList<Reports> getCountryData() throws SQLException{
+		return SQLReportDAO.getCountryTableData();
+	}
 
 }

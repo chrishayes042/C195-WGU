@@ -3,7 +3,6 @@ package DAO;
 import helper.JDBC;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.Countries;
 import model.FirstLevelDivision;
 import service.FirstLevelDivisionService;
 
@@ -16,7 +15,7 @@ public class SQLFirstLevelDivisionDAO implements FirstLevelDivisionService {
 	/**
 	 * Method that is called to call the execute method
 	 * This method gets a list of FirstLevelDivision objects from the execute method
-	 * @return ObeservableList<FirstLevelDivision>
+	 * @return ObeservableList
 	 * @throws SQLException
 	 */
 	public static ObservableList<FirstLevelDivision> getAllDivisions() throws SQLException{

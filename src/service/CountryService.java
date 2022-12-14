@@ -15,7 +15,7 @@ public interface CountryService {
 
 	/**
 	 * Method used to get a list of all the sql table rows
-	 * @return
+	 * @return ObservableList
 	 * @throws SQLException
 	 */
 	public static ObservableList<Countries> getAllCountries() throws SQLException{
@@ -25,7 +25,7 @@ public interface CountryService {
 	/**
 	 * Method used to get the country name from the sql table where the country_id = id
 	 * @param id
-	 * @return
+	 * @return String
 	 * @throws SQLException
 	 */
 	public static String getCountryByID(int id) throws SQLException{
