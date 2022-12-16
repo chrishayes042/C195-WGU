@@ -171,41 +171,76 @@ public class AddAppointmentController implements Initializable {
 		boolean textCheck = true;
 		String error = "";
 		if (appIdText.getText().trim().isEmpty()) {
-			error += "The Application ID is blank";
+			error += "The Application ID is blank\n";
 			textCheck = false;
-		} else if (appTitleText.getText().trim().isEmpty()) {
-			error += "The Application Title is blank";
+		}
+		if (appTitleText.getText().trim().isEmpty()) {
+			error += "The Application Title is blank\n";
 			textCheck = false;
-		} else if (appDescText.getText().trim().isEmpty()) {
-			error += "The Application Description is blank";
+		}
+		if (appDescText.getText().trim().isEmpty()) {
+			error += "The Application Description is blank\n";
 			textCheck = false;
-		} else if (appLocText.getText().trim().isEmpty()) {
-			error += "The Application Location is blank";
+		}
+		if (appLocText.getText().trim().isEmpty()) {
+			error += "The Application Location is blank\n";
 			textCheck = false;
-		} else if (appTypeText.getText().trim().isEmpty()) {
-			error += "The Application Type is blank";
+		}
+		if (appTypeText.getText().trim().isEmpty()) {
+			error += "The Application Type is blank\n";
 			textCheck = false;
-		} else if (startDatePicker.getValue() == null) {
-			error += "The Start Date cannot be null";
+		}
+		if (startDatePicker.getValue() == null) {
+			error += "The Start Date cannot be null\n";
 			textCheck = false;
-		} else if (endDatePicker.getValue() == null) {
-			error += "The End Date cannot be null";
+		}
+		if (endDatePicker.getValue() == null) {
+			error += "The End Date cannot be null\n";
 			textCheck = false;
-		} else if (custIdCombo.getSelectionModel().isSelected(0)) {
-			error += "Must Select a Customer ID";
+		}
+		if (custIdCombo.getSelectionModel().isSelected(0)) {
+			error += "Must Select a Customer ID\n";
 			textCheck = false;
-		} else if (userIdCombo.getSelectionModel().isSelected(0)) {
-			error += "Must Select a User ID";
+		}
+		if (userIdCombo.getSelectionModel().isSelected(0)) {
+			error += "Must Select a User ID\n";
 			textCheck = false;
-		} else if (contactNameCombo.getSelectionModel().isSelected(0)) {
-			error += "Select a Contact Name";
+		}
+		if (contactNameCombo.getSelectionModel().isSelected(0)) {
+			error += "Select a Contact Name\n";
 			textCheck = false;
-		} else if (startDatePicker.getValue().isAfter(endDatePicker.getValue())) {
-			error += "The start date cannot be after the end date";
+		}
+		if(startCombo.getSelectionModel().getSelectedIndex() == 0){
+			error += "You must select a start time\n";
 			textCheck = false;
-		} else if (endDatePicker.getValue().isBefore(startDatePicker.getValue())) {
-			error += "The End date cannot be before the start date";
+		}
+		if(endCombo.getSelectionModel().getSelectedIndex() == 0){
+			error += "You must select a end time\n";
 			textCheck = false;
+		}
+		if(startDatePicker.getValue() != null || endDatePicker.getValue() != null){
+
+			if (startDatePicker.getValue().isAfter(endDatePicker.getValue())) {
+				error += "The start date cannot be after the end date\n";
+				textCheck = false;
+			}
+			if (endDatePicker.getValue().isBefore(startDatePicker.getValue())) {
+				error += "The End date cannot be before the start date\n";
+				textCheck = false;
+			}
+		}
+		if(startCombo.getSelectionModel().getSelectedIndex() != 0 || endCombo.getSelectionModel().getSelectedIndex() != 0){
+			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+			LocalTime ltStart = LocalTime.parse(startCombo.getValue(), timeFormatter);
+			LocalTime ltEnd = LocalTime.parse(endCombo.getValue(), timeFormatter);
+			if (ltStart.isAfter(ltEnd)) {
+				error += "The start time cannot be after the end time\n";
+				textCheck = false;
+			}
+			if (ltEnd.isBefore(ltStart)) {
+				error += "The End time cannot be before the start time\n";
+				textCheck = false;
+			}
 		}
 
 		if (!textCheck) {

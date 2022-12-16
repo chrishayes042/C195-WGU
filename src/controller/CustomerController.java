@@ -280,22 +280,27 @@ public class CustomerController implements Initializable {
 		boolean textCheck = true;
 		String error = "";
 		if (custIdText.getText().trim().isEmpty()) {
-			error += "The Customer ID is blank";
+			error += "The Customer ID is blank\n";
 			textCheck = false;
-		} else if (custPhoneText.getText().trim().isEmpty()) {
-			error += "The Customer Phone is blank";
+		}
+		if (custPhoneText.getText().trim().isEmpty()) {
+			error += "The Customer Phone is blank\n";
 			textCheck = false;
-		} else if (custNameText.getText().trim().isEmpty()) {
-			error += "The Customer Name is blank";
+		}
+		if (custNameText.getText().trim().isEmpty()) {
+			error += "The Customer Name is blank\n";
 			textCheck = false;
-		} else if (custZipText.getText().trim().isEmpty()) {
-			error += "The Postal Code is blank";
+		}
+		if (custZipText.getText().trim().isEmpty()) {
+			error += "The Postal Code is blank\n";
 			textCheck = false;
-		} else if (custAddrText.getText().trim().isEmpty()) {
-			error += "The Address is blank";
+		}
+		if (custAddrText.getText().trim().isEmpty()) {
+			error += "The Address is blank\n";
 			textCheck = false;
-		}  else if (custDivisionIdCombo.getSelectionModel().isSelected(0)) {
-			error += "Must Select a Division ID";
+		}
+		if (custDivisionIdCombo.getSelectionModel().isSelected(0)) {
+			error += "Must Select a Division ID\n";
 			textCheck = false;
 		}
 

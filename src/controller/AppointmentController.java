@@ -92,7 +92,6 @@ public class AppointmentController implements Initializable {
 	@FXML
 	private RadioButton monthlyRadioButton;
 
-	private AppointmentService as;
 
 
 	/**
@@ -109,7 +108,7 @@ public class AppointmentController implements Initializable {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		appIdText.setEditable(false);
+
 		allRadioButton.setSelected(true);
 
 
@@ -139,51 +138,58 @@ public class AppointmentController implements Initializable {
 	 */
 	@FXML
 	private void updateAppointment() throws SQLException {
-		if (textCheck()) {
-			Appointments app = new Appointments();
 			Appointments clickedApp = appTableView.getSelectionModel().getSelectedItem();
-			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-			LocalDate ldStart = startDatePicker.getValue();
-			LocalDate ldEnd = endDatePicker.getValue();
-			LocalTime ltStart = LocalTime.parse(startCombo.getValue(), timeFormatter);
-			LocalTime ltEnd = LocalTime.parse(endCombo.getValue(), timeFormatter);
-			LocalDateTime ldtStart = LocalDateTime.of(ldStart, ltStart);
-			LocalDateTime ldtEnd = LocalDateTime.of(ldEnd, ltEnd);
+		if(clickedApp != null) {
+			if (textCheck()) {
+				Appointments app = new Appointments();
+				DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+				LocalDate ldStart = startDatePicker.getValue();
+				LocalDate ldEnd = endDatePicker.getValue();
+				LocalTime ltStart = LocalTime.parse(startCombo.getValue(), timeFormatter);
+				LocalTime ltEnd = LocalTime.parse(endCombo.getValue(), timeFormatter);
+				LocalDateTime ldtStart = LocalDateTime.of(ldStart, ltStart);
+				LocalDateTime ldtEnd = LocalDateTime.of(ldEnd, ltEnd);
 
-			app.setAppointmentID(Integer.parseInt(appIdText.getText().trim()));
-			app.setAppointmentTitle(appTitleText.getText().trim());
-			app.setAppointmentDescription(appDescText.getText().trim());
-			app.setAppointmentLocation(appLocText.getText().trim());
-			app.setAppointmentType(appTypeText.getText().trim());
+				app.setAppointmentID(Integer.parseInt(appIdText.getText().trim()));
+				app.setAppointmentTitle(appTitleText.getText().trim());
+				app.setAppointmentDescription(appDescText.getText().trim());
+				app.setAppointmentLocation(appLocText.getText().trim());
+				app.setAppointmentType(appTypeText.getText().trim());
 
-			app.setStart(ldtStart);
-			app.setEnd(ldtEnd);
-			app.setCustomerID(CustomerService.getCustIdFromName(custIdCombo.getSelectionModel().getSelectedItem()));
-			app.setUserID(UserService.findUserIdFromName(userIdCombo.getSelectionModel().getSelectedItem()));
-			app.setCreatedBy(clickedApp.getCreatedBy());
-			int userId = UserService.findUserIdFromName(userIdCombo.getSelectionModel().getSelectedItem());
-			app.setLastUpdtUser(UserService.findUserNameFromId(userId));
-			app.setContactID(ContactService.findContactId(contactNameCombo.getSelectionModel().getSelectedItem()));
+				app.setStart(ldtStart);
+				app.setEnd(ldtEnd);
+				app.setCustomerID(CustomerService.getCustIdFromName(custIdCombo.getSelectionModel().getSelectedItem()));
+				app.setUserID(UserService.findUserIdFromName(userIdCombo.getSelectionModel().getSelectedItem()));
+				app.setCreatedBy(clickedApp.getCreatedBy());
+				app.setLastUpdtUser(userIdCombo.getSelectionModel().getSelectedItem());
+				app.setContactID(ContactService.findContactId(contactNameCombo.getSelectionModel().getSelectedItem()));
 
-			// Check if appointment has same ID or conflicting start date/time
-			Appointments overLap = AppointmentService.checkAppointmentOverLap(app, true);
-			if (overLap != null) {
-				Alert alert = new Alert(Alert.AlertType.WARNING);
-				alert.setTitle("This appointment is not allowed");
-				alert.setContentText("The appointment conflicts with appointment ID: " + overLap.getAppointmentID() + " " + overLap.getAppointmentType());
-				alert.showAndWait();
-			} else {
-				int updated = AppointmentService.updateAppointment(app);
-				if (updated > 0) {
-					setTable();
-					Alert addedAlert = new Alert(Alert.AlertType.CONFIRMATION);
-					addedAlert.setTitle("Appointment Updated");
-					String context = ("Appointment ID: " + app.getAppointmentID() + " has been updated.");
-					addedAlert.setContentText(context);
-					addedAlert.showAndWait();
+				// Check if appointment has same ID or conflicting start date/time
+				Appointments overLap = AppointmentService.checkAppointmentOverLap(app, true);
+				if (overLap != null) {
+					Alert alert = new Alert(Alert.AlertType.WARNING);
+					alert.setTitle("This appointment is not allowed");
+					alert.setContentText("The appointment conflicts with appointment ID: " + overLap.getAppointmentID() + " " + overLap.getAppointmentType());
+					alert.showAndWait();
+				} else {
+					int updated = AppointmentService.updateAppointment(app);
+					if (updated > 0) {
+						setTable();
+						Alert addedAlert = new Alert(Alert.AlertType.CONFIRMATION);
+						addedAlert.setTitle("Appointment Updated");
+						String context = ("Appointment ID: " + app.getAppointmentID() + " has been updated.");
+						addedAlert.setContentText(context);
+						addedAlert.showAndWait();
 
+					}
 				}
 			}
+		} else {
+			Alert udateAlert = new Alert(Alert.AlertType.INFORMATION);
+			udateAlert.setTitle("Must Select an Appointment");
+			udateAlert.setHeaderText("Select an Appointment");
+			udateAlert.setContentText("You must select an appointment from the table to update.");
+			udateAlert.showAndWait();
 		}
 
 	}
@@ -235,41 +241,77 @@ public class AppointmentController implements Initializable {
 		boolean textCheck = true;
 		String error = "";
 		if (appIdText.getText().trim().isEmpty()) {
-			error += "The Application ID is blank";
+			error += "The Application ID is blank\n";
 			textCheck = false;
-		} else if (appTitleText.getText().trim().isEmpty()) {
-			error += "The Application Title is blank";
+		}
+		if (appTitleText.getText().trim().isEmpty()) {
+			error += "The Application Title is blank\n";
 			textCheck = false;
-		} else if (appDescText.getText().trim().isEmpty()) {
-			error += "The Application Description is blank";
+		}
+		if (appDescText.getText().trim().isEmpty()) {
+			error += "The Application Description is blank\n";
 			textCheck = false;
-		} else if (appLocText.getText().trim().isEmpty()) {
-			error += "The Application Location is blank";
+		}
+		if (appLocText.getText().trim().isEmpty()) {
+			error += "The Application Location is blank\n";
 			textCheck = false;
-		} else if (appTypeText.getText().trim().isEmpty()) {
-			error += "The Application Type is blank";
+		}
+		if (appTypeText.getText().trim().isEmpty()) {
+			error += "The Application Type is blank\n";
 			textCheck = false;
-		} else if (startDatePicker.getValue() == null) {
-			error += "The Start Date cannot be null";
+		}
+		if (startDatePicker.getValue() == null) {
+			error += "The Start Date cannot be null\n";
 			textCheck = false;
-		} else if (endDatePicker.getValue() == null) {
-			error += "The End Date cannot be null";
+		}
+		if (endDatePicker.getValue() == null) {
+			error += "The End Date cannot be null\n";
 			textCheck = false;
-		} else if (custIdCombo.getSelectionModel().isSelected(0)) {
-			error += "Must Select a Customer ID";
+		}
+		if (custIdCombo.getSelectionModel().isSelected(0)) {
+			error += "Must Select a Customer ID\n";
 			textCheck = false;
-		} else if (userIdCombo.getSelectionModel().isSelected(0)) {
-			error += "Must Select a User ID";
+		}
+		if (userIdCombo.getSelectionModel().isSelected(0)) {
+			error += "Must Select a User ID\n";
 			textCheck = false;
-		} else if (contactNameCombo.getSelectionModel().isSelected(0)) {
-			error += "Select a Contact Name";
+		}
+		if (contactNameCombo.getSelectionModel().isSelected(0)) {
+			error += "Select a Contact Name\n";
 			textCheck = false;
-		} else if (startDatePicker.getValue().isAfter(endDatePicker.getValue())) {
-			error += "The start date cannot be after the end date";
+		}
+
+		if(startDatePicker.getValue() != null || endDatePicker.getValue() != null){
+
+			if (startDatePicker.getValue().isAfter(endDatePicker.getValue())) {
+				error += "The start date cannot be after the end date\n";
+				textCheck = false;
+			}
+			if (endDatePicker.getValue().isBefore(startDatePicker.getValue())) {
+				error += "The End date cannot be before the start date\n";
+				textCheck = false;
+			}
+		}
+		if(startCombo.getSelectionModel().getSelectedIndex() == 0){
+			error += "You must select a start time\n";
 			textCheck = false;
-		} else if (endDatePicker.getValue().isBefore(startDatePicker.getValue())) {
-			error += "The End date cannot be before the start date";
+		}
+		if(endCombo.getSelectionModel().getSelectedIndex() == 0){
+			error += "You must select a end time\n";
 			textCheck = false;
+		}
+		if(startCombo.getSelectionModel().getSelectedIndex() != 0 || endCombo.getSelectionModel().getSelectedIndex() != 0){
+			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+			LocalTime ltStart = LocalTime.parse(startCombo.getValue(), timeFormatter);
+			LocalTime ltEnd = LocalTime.parse(endCombo.getValue(), timeFormatter);
+			if (ltStart.isAfter(ltEnd)) {
+				error += "The start time cannot be after the end time\n";
+				textCheck = false;
+			}
+			if (ltEnd.isBefore(ltStart)) {
+				error += "The End time cannot be before the start time\n";
+				textCheck = false;
+			}
 		}
 
 		if (!textCheck) {
@@ -454,7 +496,8 @@ public class AppointmentController implements Initializable {
 			LocalTime ltEnd = app.getEnd().toLocalTime();
 			String ltEndString = ltEnd.toString();
 			endCombo.getSelectionModel().select(ltEndString);
-			custIdCombo.getSelectionModel().select(app.getCustomerID());
+			String custName = CustomerService.getCustNameFromId(app.getCustomerID());
+			custIdCombo.getSelectionModel().select(custName);
 			userIdCombo.getSelectionModel().select(app.getUserID());
 			String name = ContactService.findContactName(app.getContactID());
 			contactNameCombo.getSelectionModel().select(name);

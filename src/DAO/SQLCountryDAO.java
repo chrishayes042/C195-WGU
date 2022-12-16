@@ -88,6 +88,42 @@ public class SQLCountryDAO implements CountryService {
 			return country;
 		}
 	}
+	/**
+	 * Method used to instantiate the GetCountryData class to call the execute method
+	 * @return ObservableList
+	 * @throws SQLException
+	 */
+	public static ObservableList<Countries> getCountryTableData()throws SQLException{
+		GetCountryData cgd = new GetCountryData();
+		return cgd.execute();
+	}
 
+	/**
+	 * Class to get the data for a report
+	 */
+	private static class GetCountryData{
+		/**
+		 * Execute method creates the sql query string to pass into the database.
+		 * Sets the Countries object and passes it into a list to return.
+		 * @return ObservableList
+		 * @throws SQLException
+		 */
+		public ObservableList<Countries> execute() throws SQLException{
+			String sql = "select Customer_Name, Location, c.Address from appointments as a "+
+					"join customers as c on a.Customer_ID = c.Customer_ID";
+
+			PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			ObservableList<Countries> cList = FXCollections.observableArrayList();
+			while(rs.next()){
+				Countries c = new Countries();
+				c.setCountry(rs.getString(1));
+				c.setCreatedBy(rs.getString(2));
+				c.setLastUpDtUser(rs.getString(3));
+				cList.addAll(c);
+			}
+			return cList;
+		}
+	}
 
 }

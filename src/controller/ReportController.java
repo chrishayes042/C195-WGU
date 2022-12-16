@@ -1,5 +1,6 @@
 package controller;
 
+import DAO.SQLAppointmentDAO;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -11,11 +12,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.Appointments;
+import model.Countries;
 import model.Customers;
-import model.Reports;
 import service.AppointmentService;
+import service.CountryService;
 import service.CustomerService;
-import service.ReportService;
 
 
 import java.io.IOException;
@@ -30,23 +31,23 @@ import java.util.ResourceBundle;
 public class ReportController implements Initializable {
 
 	@FXML
-	private TableView<Reports> appSchTableView;
+	private TableView<Appointments> appSchTableView;
 	@FXML
-	private TableColumn<Reports, Integer> contactIdCol;
+	private TableColumn<Appointments, Integer> contactIdCol;
 	@FXML
-	private TableColumn<Reports, Integer> appIdCol;
+	private TableColumn<Appointments, Integer> appIdCol;
 	@FXML
-	private TableColumn<Reports, String> appTypeCol;
+	private TableColumn<Appointments, String> appTypeCol;
 	@FXML
-	private TableColumn<Reports, String> appTitleCol;
+	private TableColumn<Appointments, String> appTitleCol;
 	@FXML
-	private TableColumn<Reports, String> appDescCol;
+	private TableColumn<Appointments, String> appDescCol;
 	@FXML
-	private TableColumn<Reports, LocalDateTime> appStartCol;
+	private TableColumn<Appointments, LocalDateTime> appStartCol;
 	@FXML
-	private TableColumn<Reports, LocalDateTime> appEndCol;
+	private TableColumn<Appointments, LocalDateTime> appEndCol;
 	@FXML
-	private TableColumn<Reports, Integer> custIdCol;
+	private TableColumn<Appointments, Integer> custIdCol;
 	@FXML
 	private ComboBox<String> filterCombo;
 	@FXML
@@ -55,22 +56,22 @@ public class ReportController implements Initializable {
 	private TabPane reportTabPane;
 
 	@FXML
-	private TableView<Reports> custAppTableView;
+	private TableView<Appointments> custAppTableView;
 	@FXML
-	private TableColumn<Reports, String> custTableAppTypeCol;
+	private TableColumn<Appointments, String> custTableAppTypeCol;
 	@FXML
-	private TableColumn<Reports, String> custTableMonthCol;
+	private TableColumn<Appointments, String> custTableMonthCol;
 	@FXML
-	private TableColumn<Reports, Integer> custTableTotalAppCol;
+	private TableColumn<Appointments, Integer> custTableTotalAppCol;
 
 	@FXML
-	private TableView<Reports> custCountryTableView;
+	private TableView<Countries> custCountryTableView;
 	@FXML
-	private TableColumn<Reports, String> countryTableNameCol;
+	private TableColumn<Countries, String> countryTableNameCol;
 	@FXML
-	private TableColumn<Reports, String> countryTableCustLocationCol;
+	private TableColumn<Countries, String> countryTableCustLocationCol;
 	@FXML
-	private TableColumn<Reports, String> countryTableCustAddrCol;
+	private TableColumn<Countries, String> countryTableCustAddrCol;
 
 
 	/**
@@ -96,18 +97,18 @@ public class ReportController implements Initializable {
 	 */
 	@FXML
 	void setAppSchTable() throws SQLException{
-		ObservableList<Reports> reportsList = ReportService.getReportContactList();
+		ObservableList<Appointments> appList = SQLAppointmentDAO.getAppointments();
 
-		contactIdCol.setCellValueFactory(new PropertyValueFactory<>("reportContId"));
-		appIdCol.setCellValueFactory(new PropertyValueFactory<>("reportAppId"));
-		appTypeCol.setCellValueFactory(new PropertyValueFactory<>("reportAppType"));
-		appTitleCol.setCellValueFactory(new PropertyValueFactory<>("reportAppTitle"));
-		appDescCol.setCellValueFactory(new PropertyValueFactory<>("reportAppDesc"));
-		appStartCol.setCellValueFactory(new PropertyValueFactory<>("reportAppStartDt"));
-		appEndCol.setCellValueFactory(new PropertyValueFactory<>("reportAppEndDt"));
-		custIdCol.setCellValueFactory(new PropertyValueFactory<>("reportCustId"));
+		contactIdCol.setCellValueFactory(new PropertyValueFactory<>("contactID"));
+		appIdCol.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+		appTypeCol.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
+		appTitleCol.setCellValueFactory(new PropertyValueFactory<>("appointmentTitle"));
+		appDescCol.setCellValueFactory(new PropertyValueFactory<>("appointmentDescription"));
+		appStartCol.setCellValueFactory(new PropertyValueFactory<>("start"));
+		appEndCol.setCellValueFactory(new PropertyValueFactory<>("end"));
+		custIdCol.setCellValueFactory(new PropertyValueFactory<>("customerID"));
 
-		appSchTableView.setItems(reportsList);
+		appSchTableView.setItems(appList);
 	}
 
 	/**
@@ -115,21 +116,21 @@ public class ReportController implements Initializable {
 	 * @throws SQLException
 	 */
 	void setCustAppTable() throws SQLException {
-		ObservableList<Reports> reportsList = ReportService.getReportCustAppByMonth();
+		ObservableList<Appointments> appList = AppointmentService.getReportCustAppByMonth();
 
-		custTableAppTypeCol.setCellValueFactory(new PropertyValueFactory<>("reportAppType"));
-		custTableMonthCol.setCellValueFactory(new PropertyValueFactory<>("reportAppMonth"));
-		custTableTotalAppCol.setCellValueFactory(new PropertyValueFactory<>("reportTotal"));
+		custTableAppTypeCol.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
+		custTableMonthCol.setCellValueFactory(new PropertyValueFactory<>("appointmentLocation"));
+		custTableTotalAppCol.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
 
-		custAppTableView.setItems(reportsList);
+		custAppTableView.setItems(appList);
 	}
 
 	void setCountryTable() throws SQLException{
-		ObservableList<Reports> reportsList = ReportService.getCountryData();
+		ObservableList<Countries> reportsList = CountryService.getCountryData();
 
-		countryTableNameCol.setCellValueFactory(new PropertyValueFactory<>("reportCustName"));
-		countryTableCustLocationCol.setCellValueFactory(new PropertyValueFactory<>("reportAppMonth"));
-		countryTableCustAddrCol.setCellValueFactory(new PropertyValueFactory<>("reportAppType"));
+		countryTableNameCol.setCellValueFactory(new PropertyValueFactory<>("country"));
+		countryTableCustLocationCol.setCellValueFactory(new PropertyValueFactory<>("createdBy"));
+		countryTableCustAddrCol.setCellValueFactory(new PropertyValueFactory<>("lastUpDtUser"));
 
 		custCountryTableView.setItems(reportsList);
 
@@ -147,7 +148,7 @@ public class ReportController implements Initializable {
 
 			if (!filterCombo.getSelectionModel().isSelected(0)) {
 				ObservableList<Appointments> appList = AppointmentService.getAppointments();
-				ObservableList<Reports> custNameList = FXCollections.observableArrayList();
+				ObservableList<Appointments> custNameList = FXCollections.observableArrayList();
 
 				appList.forEach(app -> {
 					int custId = 0;
@@ -157,15 +158,15 @@ public class ReportController implements Initializable {
 						ex.printStackTrace();
 					}
 					if (custId == app.getCustomerID()) {
-						Reports rep = new Reports();
-						rep.setReportContId(app.getContactID());
-						rep.setReportAppId(app.getAppointmentID());
-						rep.setReportAppType(app.getAppointmentType());
-						rep.setReportAppTitle(app.getAppointmentTitle());
-						rep.setReportAppDesc(app.getAppointmentDescription());
-						rep.setReportAppStartDt(app.getStart());
-						rep.setReportAppEndDt(app.getEnd());
-						rep.setReportCustId(app.getCustomerID());
+						Appointments rep = new Appointments();
+						rep.setContactID(app.getContactID());
+						rep.setAppointmentID(app.getAppointmentID());
+						rep.setAppointmentType(app.getAppointmentType());
+						rep.setAppointmentTitle(app.getAppointmentTitle());
+						rep.setAppointmentDescription(app.getAppointmentDescription());
+						rep.setStart(app.getStart());
+						rep.setEnd(app.getEnd());
+						rep.setCustomerID(app.getCustomerID());
 						custNameList.addAll(rep);
 					}
 				});

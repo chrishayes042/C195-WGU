@@ -31,6 +31,13 @@ public interface CountryService {
 	public static String getCountryByID(int id) throws SQLException{
 		return SQLCountryDAO.getCountryByID(id);
 	}
-
+	/**
+	 * Method used to get the report data for the customer table
+	 * @return ObservableList
+	 * @throws SQLException
+	 */
+	public static ObservableList<Countries> getCountryData() throws SQLException{
+		return SQLCountryDAO.getCountryTableData();
+	}
 
 }

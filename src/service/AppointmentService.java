@@ -1,6 +1,7 @@
 package service;
 
 import DAO.SQLAppointmentDAO;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Appointments;
 
@@ -88,6 +89,40 @@ public interface AppointmentService {
 		}
 
 		return appointment;
+	}
+	/**
+	 * Method to get the report for the total numebr of customer appointments by type and month
+	 * @return ObservableList
+	 * @throws SQLException
+	 */
+	public static ObservableList<Appointments> getReportCustAppByMonth() throws SQLException {
+
+		return SQLAppointmentDAO.getCustReports();
+	}
+
+	/**
+	 * Method used to set the report data for the Contact Table
+	 * @return ObservableList
+	 * @throws SQLException
+	 */
+	public static ObservableList<Appointments> getReportContactList() throws SQLException {
+		ObservableList<Appointments> appList = SQLAppointmentDAO.getAppointments();
+		ObservableList<Appointments> repList = FXCollections.observableArrayList();
+
+		appList.forEach(app ->{
+			Appointments apps = new Appointments();
+//			apps.setContactID(app.getContactID());
+//			apps.setAppointmentID(app.getAppointmentID());
+//			apps.setReportAppType(app.getAppointmentType());
+//			apps.setReportAppDesc(app.getAppointmentDescription());
+//			apps.setReportAppStartDt(app.getStart());
+//			apps.setReportAppEndDt(app.getEnd());
+//			apps.setReportAppTitle(app.getAppointmentTitle());
+//			apps.setReportCustId(app.getCustomerID());
+			repList.addAll(apps);
+		});
+		return repList;
+
 	}
 
 }
