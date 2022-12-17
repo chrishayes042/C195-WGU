@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * Main class
+ */
 public class Main extends Application {
     /**
      * Start method that starts the application window to the login screen

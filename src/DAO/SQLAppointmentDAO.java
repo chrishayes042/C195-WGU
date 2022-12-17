@@ -5,7 +5,6 @@ import helper.JDBC;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Appointments;
-import model.Customers;
 import service.AppointmentService;
 
 import java.sql.PreparedStatement;

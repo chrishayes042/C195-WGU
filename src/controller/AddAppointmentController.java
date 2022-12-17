@@ -131,10 +131,8 @@ public class AddAppointmentController implements Initializable {
 			app.setEnd(ldtEnd);
 			app.setCustomerID(CustomerService.getCustIdFromName(custIdCombo.getSelectionModel().getSelectedItem()));
 			app.setUserID(UserService.findUserIdFromName(userIdCombo.getSelectionModel().getSelectedItem()));
-
-			String userName = UserService.findUserNameFromId(Integer.parseInt(userIdCombo.getSelectionModel().getSelectedItem()));
-			app.setCreatedBy(userName);
-			app.setLastUpdtUser(userName);
+			app.setCreatedBy(userIdCombo.getSelectionModel().getSelectedItem());
+			app.setLastUpdtUser(userIdCombo.getSelectionModel().getSelectedItem());
 
 			app.setContactID(ContactService.findContactId(contactNameCombo.getSelectionModel().getSelectedItem()));
 			// Check if appointment has same ID or conflicting start date/time
