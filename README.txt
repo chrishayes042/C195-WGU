@@ -1,3 +1,6 @@
+THIS PROJECT IS COMPLETED AND PASSED. PLEASE DO NOT COPY THIS PROJECT. USE FOR REFERENCE ONLY
+
+
 # C195 Application
 The purpose of this application is to teach the creator how to design an application that utilizes a MSSQL database.
 To do this, I created a Java GUI desktop application that schedules appointments.
